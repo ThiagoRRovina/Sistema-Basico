@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+        body{
+            background-color: #c9d6ff;
+            background: linear-gradient(to right, #313b43, #313b43);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .container input{
+            background-color: #eee;
+            border: none;
+            margin: 8px 0;
+            padding: 10px 15px;
+            font-size: 13px;
+            border-radius: 8px;
+            width: 100%;
+            outline: none;
+
+        }
+        .container form{
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 40px;
+            height: 100%;
+
+        }
+        .container button {
+            background-color: #11aea4;
+            color: #ffffff;
+            font-size: 12px;
+            padding: 10px 45px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .container button.hidden {
+            background-color: transparent;
+            border-color: #ffffff;
+        }
+        .container form {
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 40px;
+            height: 100%;
+        }
+        @keyframes move {
+
+            0%,
+            49.99% {
+                opacity: 0;
+                z-index: 1;
+            }
+
+            50%,
+            100% {
+                opacity: 1;
+                z-index: 5;
+            }
+        }
+
+    </style>
+    <body>
+        <form method="post" th:action="@{/telaLogin/salvar}">
+
+            <label for="nmEndereco">Endereço:</label>
+            <input type="text" id="nmEndereco" name="nmEndereco" required>
+            <label for="nmNome">Nome:</label>
+            <input type="text" id="nmNome" name="nmNome" required>
+
+            <label for="nmEmail">Email</label>
+            <input type="email" id="nmEmail" name="nmEmail" required>
+
+            <label for="nmSenha">Senha:</label>
+            <input type="password" id="nmSenha" name="nmSenha" required>
+
+
+            <button type="submit">Salvar</button>
+        </form>
+        <script src="script.js" async defer></script>
+    </body>
+</html>
