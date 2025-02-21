@@ -19,11 +19,10 @@
 //        super(Produtos.class);
 //    }
 //
-//    public Produtos buscaPorNome(String nomeproduto) {
+//    public Produtos buscaProduto(Integer id, String nome) {
 //        try {
 //            return entityManager
-//                    .createQuery("SELECT Produtos FROM Produtos  WHERE Produtos .nmProduto = :nome", Produtos.class)
-//                    .setParameter("nome", nomeproduto)
+//                    .createQuery("SELECT P1.idProduto, P1.nmProduto FROM  Produtos p1", Produtos.class)
 //                    .getSingleResult();
 //        } catch (NoResultException e) {
 //            return null;

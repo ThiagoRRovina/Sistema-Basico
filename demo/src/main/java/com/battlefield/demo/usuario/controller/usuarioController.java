@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.persistence.EntityManager;
+import java.text.ParseException;
 
 @Controller
 @RequestMapping("/telaLogin")
@@ -38,9 +39,14 @@ public class usuarioController {
                          @RequestParam String nmEmail,
                          @RequestParam String nmEndereco,
                          @RequestParam String nmSenha,
-                         RedirectAttributes redirectAttributes) {
-        System.out.println("----funcao salvar----");
-        System.out.println("Dados recebidos: Nome=" + nmNome + ", Email=" + nmEmail);
+                         Model model) {
+
+        // Verificar se o email já existe se não existi inseri no banco
+        Usuario usuarioExistente = usuariodao.buscarPorEmail(nmEmail);
+        if (usuarioExistente != null && (idusuario == null || !usuarioExistente.getIdUsuario().equals(idusuario))) {
+            model.addAttribute("erro", "O email já está registrado.");
+            return "redirect:/telaLogin";
+        }
 
         Usuario usuario = new Usuario();
         usuario.setNmNome(nmNome);
@@ -48,31 +54,51 @@ public class usuarioController {
         usuario.setNmEndereco(nmEndereco);
         usuario.setNmSenha(nmSenha);
 
-        if (idusuario == null || idusuario == -1) {
-            try {
+        try {
+            if (idusuario == null || idusuario == -1) {
                 usuariodao.gravar(usuario);
-                redirectAttributes.addFlashAttribute("message", "Usuário cadastrado com sucesso!");
-                usuarioDAO.insereLog("USUARIO", TipoOcorrenciaLog.INSERCAO);
-                return "redirect:/usuarios";
-            } catch (Exception e) {
-                System.out.println("Erro ao salvar usuário: " + e.getMessage());
-                redirectAttributes.addFlashAttribute("error", "Erro: não foi possível incluir o usuário.");
+                usuariodao.insereLog("USUARIO", TipoOcorrenciaLog.INSERCAO);
+                System.out.println("Usuário inserido com sucesso.");
                 return "redirect:/telaLogin";
-            }
-        } else {
-            usuario.setIdUsuario(idusuario);
-            boolean atualizou = usuariodao.atualizar(usuario);
-            if (atualizou) {
-                redirectAttributes.addFlashAttribute("message", "Usuário atualizado com sucesso!");
-                usuarioDAO.insereLog("USUARIO", TipoOcorrenciaLog.ALTERACAO);
-                return "redirect:/usuarios";
             } else {
-                redirectAttributes.addFlashAttribute("error", "Erro: não foi possível atualizar o usuário.");
-                return "redirect:/telaLogin";
+                usuario.setIdUsuario(idusuario);
+                boolean atualizou = usuariodao.atualizar(usuario);
+
+                if (atualizou) {
+                    usuariodao.insereLog("USUARIO", TipoOcorrenciaLog.ALTERACAO);
+                    System.out.println("Usuário atualizado com sucesso.");
+                    return "redirect:/telaLogin";
+                } else {
+                    model.addAttribute("erro", "Erro ao atualizar o usuário.");
+                    return "redirect:/telaLogin";
+                }
             }
+        } catch (Exception e) {
+            System.out.println("Erro ao salvar ou atualizar usuário: " + e.getMessage());
+            e.printStackTrace();
+            model.addAttribute("erro", "Erro interno no servidor.");
+            return "redirect:/telaLogin";
         }
     }
 
 
+
+    @PostMapping("/login")
+    public String validarLogin(@RequestParam String nmEmail,
+                               @RequestParam String nmSenha,
+                               RedirectAttributes redirectAttributes) {
+
+        Usuario usuario = usuariodao.buscaUsuario(nmEmail, nmSenha);
+
+        if (usuario != null) {
+
+            redirectAttributes.addFlashAttribute("message", "Login realizado com sucesso!");
+            return "redirect:/telaLogin";
+        } else {
+
+            redirectAttributes.addFlashAttribute("error", "Credenciais inválidas. Tente novamente.");
+            return "redirect:/telaLogin";
+        }
+    }
 
 }

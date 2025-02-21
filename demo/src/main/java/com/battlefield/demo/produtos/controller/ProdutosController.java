@@ -3,6 +3,7 @@
 //import com.battlefield.demo.produtos.dao.ProdutosDAO;
 //import com.battlefield.demo.usuario.dao.usuarioDAO;
 //import com.battlefield.demo.produtos.model.Produtos;
+//import com.battlefield.demo.usuario.model.Usuario;
 //import org.springframework.stereotype.Controller;
 //import org.springframework.web.bind.annotation.GetMapping;
 //import org.springframework.web.bind.annotation.PostMapping;
@@ -11,7 +12,7 @@
 //import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 //
 //@Controller
-//@RequestMapping("/telaLogin")
+//@RequestMapping("/telaProduto")
 //public class ProdutosController {
 //    private final ProdutosDAO produtosDAO;
 //
@@ -63,6 +64,27 @@
 //                redirectAttributes.addFlashAttribute("error", "Erro: não foi possível atualizar o usuário.");
 //                return "redirect:/telaLogin";
 //            }
+//        }
+//    }
+//    @PostMapping("/telaProduto")
+//    public String validarProduto(@RequestParam Integer idProduto,
+//                                @RequestParam String nmProduto,
+//                                @RequestParam String deProduto,
+//                                @RequestParam String nuPreco,
+//                                @RequestParam String qtEstoque,
+//                               RedirectAttributes redirectAttributes) {
+//        System.out.println("----Validando Login----");
+//        System.out.println("Produto: " + nmProduto);
+//
+//        Produtos produtos = produtosDAO.buscaProduto(idProduto, nmProduto);
+//
+//        if (produtos != null) {
+//
+//            redirectAttributes.addFlashAttribute("message", "Login realizado com sucesso!");
+//            return "redirect:/telaProdutos";
+//        } else {
+//            redirectAttributes.addFlashAttribute("error", "Credenciais inválidas. Tente novamente.");
+//            return "redirect:/telaLogin";
 //        }
 //    }
 //}
