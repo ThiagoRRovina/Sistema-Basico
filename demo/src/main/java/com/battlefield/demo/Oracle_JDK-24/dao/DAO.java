@@ -60,4 +60,5 @@ public class DAO {
         entityManager.close();
         entityManagerFactory.close();
     }
+
 }

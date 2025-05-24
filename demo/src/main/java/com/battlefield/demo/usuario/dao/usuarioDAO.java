@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
 
+import java.util.List;
+
 @Repository
 public class usuarioDAO extends GenericDAO<Usuario, Integer> {
 
@@ -19,20 +21,18 @@ public class usuarioDAO extends GenericDAO<Usuario, Integer> {
         super(Usuario.class);
     }
     public Usuario buscarPorEmail(String email) {
-        try {
-            return entityManager
-                    .createQuery("SELECT u FROM Usuario u WHERE u.nmEmail = :email", Usuario.class)
-                    .setParameter("email", email)
-                    .getSingleResult();
-        } catch (NoResultException e) {
-            return null; // Retorna null se não encontrar usuário
-        }
+        List<Usuario> resultado = entityManager
+                .createQuery("SELECT u FROM Usuario u WHERE u.nmEmail = :email", Usuario.class)
+                .setParameter("email", email)
+                .getResultList();
+
+        return resultado.isEmpty() ? null : resultado.get(0);
     }
 
     public Usuario buscaUsuario(String email, String senha) {
         try {
             return entityManager
-                    .createQuery("SELECT u FROM Usuario u WHERE u.nmEmail = :email AND u.nmSenha = :senha", Usuario.class)
+                    .createQuery("SELECT u.nmEmail, u.nmSenha FROM Usuario u WHERE u.nmEmail = :email AND u.nmSenha= :senha", Usuario.class)
                     .setParameter("email", email)
                     .setParameter("senha", senha)
                     .getSingleResult();
@@ -41,15 +41,16 @@ public class usuarioDAO extends GenericDAO<Usuario, Integer> {
         }
     }
 
-//    public List<Usuario> listarTodos(String filtro, String ordem) {
-//        try {
-//            return entityManager.createQuery("FROM Usuario t WHERE " + filtro + " " + ordem, Usuario.class)
-//                    .getResultList();
-//        } catch (Exception e) {
-//            System.out.println("------ERRO usuarioDAO-----\n" + e.getMessage());
-//            return null;
-//        }
-//    }
+    public Usuario validaLogin(String email, String senha) {
+        List<Usuario> resultado = entityManager
+                .createQuery("SELECT u FROM Usuario u WHERE u.nmEmail = :email AND u.nmSenha = :senha", Usuario.class)
+                .setParameter("email", email)
+                .setParameter("senha", senha)
+                .getResultList();
+
+        return resultado.isEmpty() ? null : resultado.get(0);
+    }
+
 
     @Transactional
     public void gravar(Usuario usuario) {

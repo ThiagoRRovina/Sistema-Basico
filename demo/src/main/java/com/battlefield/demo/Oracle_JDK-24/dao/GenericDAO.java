@@ -21,7 +21,7 @@ import java.util.List;
  * @param <T>
  * @param <I>
  */
-public abstract class GenericDAO<T, I extends Serializable> extends DAO {
+public abstract class GenericDAO<T, I extends Serializable> extends com.battlefield.demo.dao.DAO {
 
     private final Class<T> classe;
 

@@ -25,7 +25,7 @@ public class Battlefield3Application {
 				e.printStackTrace();
 			}
 		} else {
-			System.out.println("----------> ERRO java.Aplicattion: " + url);
+			System.out.println("java.Aplicattion: " + url);
 		}
 	}
 

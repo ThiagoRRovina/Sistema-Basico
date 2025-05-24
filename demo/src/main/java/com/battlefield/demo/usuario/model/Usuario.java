@@ -12,21 +12,24 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_USUARIO")
+    @Column(name = "USUARIO_ID")
     private Integer idUsuario;
 
-    @Column(name = "NM_NOME", nullable = false)
+    @Column(name = "NOME", nullable = false)
     private String nmNome;
 
 
-    @Column(name = "NM_EMAIL", nullable = false)
+    @Column(name = "EMAIL", nullable = false)
     private String nmEmail;
 
-    @Column(name = "NM_SENHA", nullable = false)
+    @Column(name = "SENHA", nullable = false)
     private String nmSenha;
 
-    @Column(name = "NM_ENDERECO", nullable = false)
+    @Column(name = "ENDERECO", nullable = false)
     private String nmEndereco;
+
+    @Column(name = "TELEFONE", nullable = false)
+    private String nmTelefone;
 
     public Usuario() {
         this.idUsuario = idUsuario;
@@ -34,16 +37,7 @@ public class Usuario {
         this.nmEmail = nmEmail;
         this.nmSenha = nmSenha;
         this.nmEndereco = nmEndereco;
+        this.nmTelefone = nmTelefone;
     }
 
-    @Override
-    public String toString() {
-        return "Usuario{" +
-                "idUsuario=" + idUsuario +
-                ", nmNome='" + nmNome + '\'' +
-                ", nmEmail='" + nmEmail + '\'' +
-                ", nmSenha='" + nmSenha + '\'' +
-                ", nmEndereco='" + nmEndereco + '\'' +
-                '}';
-    }
 }
