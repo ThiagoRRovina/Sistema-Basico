@@ -1,15 +1,10 @@
 package com.battlefield.demo.produtos.controller;
 
-
 import com.battlefield.demo.produtos.dao.ProdutosDAO;
 import com.battlefield.demo.produtos.model.Produtos;
 import org.springframework.stereotype.Controller;
-
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -19,9 +14,11 @@ import java.util.List;
 public class ProdutosController {
 
     private final ProdutosDAO produtosdao;
+    private final ProdutosDAO produtosDAO;
 
-    public ProdutosController(ProdutosDAO produtosdao) {
+    public ProdutosController(ProdutosDAO produtosdao, ProdutosDAO produtosDAO) {
         this.produtosdao = produtosdao;
+        this.produtosDAO = produtosDAO;
     }
 
     @GetMapping
@@ -58,13 +55,9 @@ public class ProdutosController {
                 redirectAttributes.addFlashAttribute("message", "Produto cadastrado com sucesso!");
             } else {
                 produto.setIdProduto(idProduto);
-                boolean atualizou = produtosdao.atualizar(produto);
-                if (atualizou) {
-                    ProdutosDAO.insereLog("PRODUTOS", ProdutosDAO.TipoOcorrenciaLog.ALTERACAO);
-                    redirectAttributes.addFlashAttribute("message", "Produto atualizado com sucesso!");
-                } else {
-                    redirectAttributes.addFlashAttribute("erro", "Erro ao atualizar o produto.");
-                }
+                produtosdao.editar(produto);
+                ProdutosDAO.insereLog("PRODUTOS", ProdutosDAO.TipoOcorrenciaLog.ALTERACAO);
+                redirectAttributes.addFlashAttribute("message", "Produto atualizado com sucesso!");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,80 +67,43 @@ public class ProdutosController {
         return "redirect:/telaProduto/lista";
     }
 
-    @PostMapping("/editarProduto")
-    public String editarProduto(@RequestParam(required = false) Integer idProduto,
-                                @RequestParam String nmProduto,
-                                @RequestParam String deProduto,
-                                @RequestParam int nuPreco,
-                                @RequestParam int qtEstoque,
-                                RedirectAttributes redirectAttributes) {
 
-        Produtos produto = new Produtos();
-        produto.setNmProduto(nmProduto);
-        produto.setDeProduto(deProduto);
-        produto.setNuPreco(nuPreco);
-        produto.setQtEstoque(qtEstoque);
-
+    @GetMapping("/editar/{idProduto}")
+    public String editarProduto(@PathVariable Integer idProduto, Model model, RedirectAttributes redirectAttributes) {
         try {
-            if (idProduto == null || idProduto == -1) {
-                produtosdao.gravar(produto);
-                ProdutosDAO.insereLog("PRODUTOS", ProdutosDAO.TipoOcorrenciaLog.INSERCAO);
-                redirectAttributes.addFlashAttribute("message", "Produto cadastrado com sucesso!");
-            } else {
-                produto.setIdProduto(idProduto);
-                boolean atualizou = produtosdao.atualizar(produto);
-                if (atualizou) {
-                    ProdutosDAO.insereLog("PRODUTOS", ProdutosDAO.TipoOcorrenciaLog.ALTERACAO);
-                    redirectAttributes.addFlashAttribute("message", "Produto atualizado com sucesso!");
-                } else {
-                    redirectAttributes.addFlashAttribute("erro", "Erro ao atualizar o produto.");
-                }
+            Produtos produto = produtosdao.buscarPorId(idProduto);
+
+            if (produto == null) {
+                redirectAttributes.addFlashAttribute("erro", "Produto não encontrado.");
+                return "redirect:/telaProduto/lista";
             }
+            model.addAttribute("produto", produto);
+            return "Produto/telaProduto";
         } catch (Exception e) {
             e.printStackTrace();
-            redirectAttributes.addFlashAttribute("erro", "Erro interno no servidor.");
+            redirectAttributes.addFlashAttribute("erro", "Erro ao carregar produto.");
+            return "redirect:/telaProduto/lista";
         }
-
-        return "redirect:/telaProduto/listaProduto";
     }
 
-    @PostMapping("/excluirProduto")
-    public String excluirProduto(@RequestParam(required = false) Integer idProduto,
-                                @RequestParam String nmProduto,
-                                @RequestParam String deProduto,
-                                @RequestParam int nuPreco,
-                                @RequestParam int qtEstoque,
-                                RedirectAttributes redirectAttributes) {
+    public String limparCampos(Model model) {
+        model.addAttribute("produto", new Produtos());
+        return "Produto/telaProduto";
+    }
 
-        Produtos produto = new Produtos();
-        produto.setNmProduto(nmProduto);
-        produto.setDeProduto(deProduto);
-        produto.setNuPreco(nuPreco);
-        produto.setQtEstoque(qtEstoque);
-
+    @GetMapping("/excluir/{idProduto}")
+    public String excluirProduto(@PathVariable("idProduto") Integer idProduto, RedirectAttributes redirectAttributes) {
         try {
-            if (idProduto == null || idProduto == -1) {
-                produtosdao.gravar(produto);
-                ProdutosDAO.insereLog("PRODUTOS", ProdutosDAO.TipoOcorrenciaLog.INSERCAO);
-                redirectAttributes.addFlashAttribute("message", "Produto cadastrado com sucesso!");
-            } else {
-                produto.setIdProduto(idProduto);
-                boolean atualizou = produtosdao.atualizar(produto);
-                if (atualizou) {
-                    ProdutosDAO.insereLog("PRODUTOS", ProdutosDAO.TipoOcorrenciaLog.ALTERACAO);
-                    redirectAttributes.addFlashAttribute("message", "Produto atualizado com sucesso!");
-                } else {
-                    redirectAttributes.addFlashAttribute("erro", "Erro ao atualizar o produto.");
-                }
-            }
+            produtosdao.excluir(idProduto);
+            ProdutosDAO.insereLog("PRODUTOS", ProdutosDAO.TipoOcorrenciaLog.EXCLUSAO);
+            redirectAttributes.addFlashAttribute("message", "Produto excluído com sucesso!");
         } catch (Exception e) {
             e.printStackTrace();
-            redirectAttributes.addFlashAttribute("erro", "Erro interno no servidor.");
+            redirectAttributes.addFlashAttribute("erro", "Erro ao excluir o produto.");
         }
 
-        return "redirect:/telaProduto/listaProduto";
+        return "redirect:/telaProduto/lista";
     }
-
 
 
     @PostMapping

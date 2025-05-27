@@ -39,6 +39,35 @@ public class ProdutosDAO  extends GenericDAO<Produtos, Integer> {
         }
     }
 
+    public Produtos buscarPorId(Integer idProduto) {
+        Produtos produto = null;
+        String sql = "SELECT * FROM produtos WHERE produto_id = ?";
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idProduto);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    produto = new Produtos();
+                    produto.setIdProduto(rs.getInt("produto_id"));
+                    produto.setNmProduto(rs.getString("nome"));
+                    produto.setDeProduto(rs.getString("descricao"));
+                    produto.setNuPreco(rs.getInt("preco"));
+                    produto.setQtEstoque(rs.getInt("estoque"));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return produto;
+    }
+
+
+
+
     public List<Produtos> listarTodos() {
         List<Produtos> lista = new ArrayList<>();
 
@@ -52,7 +81,7 @@ public class ProdutosDAO  extends GenericDAO<Produtos, Integer> {
                 Produtos p = new Produtos();
                 p.setIdProduto(rs.getInt("produto_id"));
                 p.setNmProduto(rs.getString("nome"));
-                p.setDeProduto(rs.getString("descricao"));    //trocar
+                p.setDeProduto(rs.getString("descricao"));
                 p.setNuPreco(rs.getInt("preco"));
                 p.setQtEstoque(rs.getInt("estoque"));
                 lista.add(p);
@@ -93,7 +122,7 @@ public class ProdutosDAO  extends GenericDAO<Produtos, Integer> {
 
 
     public boolean excluir(Integer idProduto) {
-        String sql = "DELETE FROM produtos WHERE idProduto = ?";
+        String sql = "DELETE FROM produtos WHERE produto_id = ?";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -102,6 +131,7 @@ public class ProdutosDAO  extends GenericDAO<Produtos, Integer> {
             return linhasAfetadas > 0;
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new RuntimeException("Erro ao excluir o produto", e);
         }
     }
@@ -110,7 +140,7 @@ public class ProdutosDAO  extends GenericDAO<Produtos, Integer> {
 
     @Transactional
     public void editar(Produtos produtos) {
-        String sql = "UPDATE produtos SET nome = ?, descricao = ?, preco = ?, estoque = ? WHERE id = ?";
+        String sql = "UPDATE produtos SET nome = ?, descricao = ?, preco = ?, estoque = ? WHERE produto_id = ?";
 
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {

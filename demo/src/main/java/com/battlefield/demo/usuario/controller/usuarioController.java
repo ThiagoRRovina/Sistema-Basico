@@ -1,5 +1,7 @@
 package com.battlefield.demo.usuario.controller;
 
+import com.battlefield.demo.produtos.dao.ProdutosDAO;
+import com.battlefield.demo.produtos.model.Produtos;
 import com.battlefield.demo.usuario.dao.usuarioDAO;
 import com.battlefield.demo.usuario.dao.usuarioDAO.TipoOcorrenciaLog;
 import com.battlefield.demo.usuario.model.Usuario;
@@ -11,18 +13,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/telaLogin")
 public class usuarioController {
 
+    private final ProdutosDAO produtosdao;
     private final usuarioDAO usuariodao;
 
-    public usuarioController(usuarioDAO usuariodao) {
+    public usuarioController(ProdutosDAO produtosdao, usuarioDAO usuariodao) {
+        this.produtosdao = produtosdao;
         this.usuariodao = usuariodao;
     }
 
 
-
+    @GetMapping("/lista")
+    public String exibirFormLista(Model model) {
+        List<Produtos> produtos = produtosdao.listarTodos();
+        model.addAttribute("produtos", produtos);
+        return "Produto/listaProdutos";
+    }
 
     @GetMapping
     public String exibirForm() {;
@@ -94,7 +105,7 @@ public class usuarioController {
 
         if (usuario != null) {
             redirectAttributes.addFlashAttribute("message", "Login realizado com sucesso!");
-            return "Produto/listaProdutos";
+            return "redirect:/telaLogin/lista";
         } else {
             redirectAttributes.addFlashAttribute("error", "Credenciais inválidas. Tente novamente.");
             return "redirect:/telaLogin";

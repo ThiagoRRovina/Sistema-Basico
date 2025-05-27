@@ -143,9 +143,9 @@
       <td th:text="${produto.nuPreco}">R$ 0,00</td>
       <td th:text="${produto.qtEstoque}">0</td>
       <td>
-        <a th:href="@{/telaProduto/editar/{id}(id=${produto.idProduto})}" class="btn btn-edit">Editar</a>
-        <a th:href="@{/telaProduto/excluir/{id}(id=${produto.idProduto})}" class="btn btn-delete"
-           onclick="return confirm('Deseja realmente excluir este produto?')">Excluir</a>
+        <a th:href="@{/telaProduto/editar/{idProduto}(idProduto=${produto.idProduto})}" class="btn btn-edit">Editar</a>
+        <a th:href="@{/telaProduto/excluir/{idProduto}(idProduto=${produto.idProduto})}" class="btn btn-delete"
+           onclick="return confirm('Tem certeza que deseja excluir este produto?');">Excluir</a>
       </td>
     </tr>
     </tbody>
