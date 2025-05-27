@@ -1,90 +1,167 @@
-//package com.battlefield.demo.produtos.controller;
-//
-//import com.battlefield.demo.produtos.dao.ProdutosDAO;
-//import com.battlefield.demo.usuario.dao.usuarioDAO;
-//import com.battlefield.demo.produtos.model.Produtos;
-//import com.battlefield.demo.usuario.model.Usuario;
-//import org.springframework.stereotype.Controller;
-//import org.springframework.web.bind.annotation.GetMapping;
-//import org.springframework.web.bind.annotation.PostMapping;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RequestParam;
-//import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-//
-//@Controller
-//@RequestMapping("/telaProduto")
-//public class ProdutosController {
-//    private final ProdutosDAO produtosDAO;
-//
-//    public ProdutosController() {
-//        produtosDAO = null;
-//    }
-//
-//
-//    @GetMapping
-//    public String exibirForm() {;
-//        return "telaProduto";
-//    }
-//
-//    @PostMapping("/salvarProduto")
-//    public String salvarProduto(@RequestParam(required = false) Integer idProduto,
-//                         @RequestParam String nmProduto,
-//                         @RequestParam String deProduto,
-//                         @RequestParam int nuPreco,
-//                         @RequestParam int qtEstoque,
-//                         RedirectAttributes redirectAttributes) {
-//        System.out.println("----funcao salvar----");
-//        System.out.println("Dados recebidos\n------------------\n Nome=" + nmProduto + "| Email=" + nuPreco + " | "+ ", Quantidade=" + qtEstoque);
-//
-//        Produtos produtos = new Produtos();
-//        produtos.setNmProduto(nmProduto);
-//        produtos.setDeProduto(deProduto);
-//        produtos.setNuPreco(nuPreco);
-//        produtos.setQtEstoque(qtEstoque);
-//
-//        if (idProduto == null || idProduto == -1) {
-//            try {
-//                produtosDAO.gravar(produtos);
-//                redirectAttributes.addFlashAttribute("message", "Usuário cadastrado com sucesso!");
-//                ProdutosDAO.insereLog("USUARIO", ProdutosDAO.TipoOcorrenciaLog.INSERCAO);
-//                return "redirect:/telaProdutos";
-//            } catch (Exception e) {
-//                System.out.println("Erro ao salvar usuário: " + e.getMessage());
-//                redirectAttributes.addFlashAttribute("error", "Erro: não foi possível incluir o usuário.");
-//                return "redirect:/telaLogin";
-//            }
-//        } else {
-//            produtos.setIdProduto(idProduto);
-//            boolean atualizou = produtosDAO.atualizar(produtos);
-//            if (atualizou) {
-//                redirectAttributes.addFlashAttribute("message", "Usuário atualizado com sucesso!");
-//                ProdutosDAO.insereLog("PRODUTOS_1", ProdutosDAO.TipoOcorrenciaLog.ALTERACAO);
-//                return "redirect:/telaProdutos";
-//            } else {
-//                redirectAttributes.addFlashAttribute("error", "Erro: não foi possível atualizar o usuário.");
-//                return "redirect:/telaLogin";
-//            }
-//        }
-//    }
-//    @PostMapping("/telaProduto")
-//    public String validarProduto(@RequestParam Integer idProduto,
-//                                @RequestParam String nmProduto,
-//                                @RequestParam String deProduto,
-//                                @RequestParam String nuPreco,
-//                                @RequestParam String qtEstoque,
-//                               RedirectAttributes redirectAttributes) {
-//        System.out.println("----Validando Login----");
-//        System.out.println("Produto: " + nmProduto);
-//
-//        Produtos produtos = produtosDAO.buscaProduto(idProduto, nmProduto);
-//
-//        if (produtos != null) {
-//
-//            redirectAttributes.addFlashAttribute("message", "Login realizado com sucesso!");
-//            return "redirect:/telaProdutos";
-//        } else {
-//            redirectAttributes.addFlashAttribute("error", "Credenciais inválidas. Tente novamente.");
-//            return "redirect:/telaLogin";
-//        }
-//    }
-//}
+package com.battlefield.demo.produtos.controller;
+
+
+import com.battlefield.demo.produtos.dao.ProdutosDAO;
+import com.battlefield.demo.produtos.model.Produtos;
+import org.springframework.stereotype.Controller;
+
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/telaProduto")
+public class ProdutosController {
+
+    private final ProdutosDAO produtosdao;
+
+    public ProdutosController(ProdutosDAO produtosdao) {
+        this.produtosdao = produtosdao;
+    }
+
+    @GetMapping
+    public String exibirForm() {
+        return "Produto/telaProduto";
+    }
+
+    @GetMapping("/lista")
+    public String exibirFormLista(Model model) {
+        List<Produtos> produtos = produtosdao.listarTodos();
+        model.addAttribute("produtos", produtos);
+        return "Produto/listaProdutos";
+    }
+
+
+    @PostMapping("/salvarProduto")
+    public String salvarProduto(@RequestParam(required = false) Integer idProduto,
+                                @RequestParam String nmProduto,
+                                @RequestParam String deProduto,
+                                @RequestParam int nuPreco,
+                                @RequestParam int qtEstoque,
+                                RedirectAttributes redirectAttributes) {
+
+        Produtos produto = new Produtos();
+        produto.setNmProduto(nmProduto);
+        produto.setDeProduto(deProduto);
+        produto.setNuPreco(nuPreco);
+        produto.setQtEstoque(qtEstoque);
+
+        try {
+            if (idProduto == null || idProduto == -1) {
+                produtosdao.gravar(produto);
+                ProdutosDAO.insereLog("PRODUTOS", ProdutosDAO.TipoOcorrenciaLog.INSERCAO);
+                redirectAttributes.addFlashAttribute("message", "Produto cadastrado com sucesso!");
+            } else {
+                produto.setIdProduto(idProduto);
+                boolean atualizou = produtosdao.atualizar(produto);
+                if (atualizou) {
+                    ProdutosDAO.insereLog("PRODUTOS", ProdutosDAO.TipoOcorrenciaLog.ALTERACAO);
+                    redirectAttributes.addFlashAttribute("message", "Produto atualizado com sucesso!");
+                } else {
+                    redirectAttributes.addFlashAttribute("erro", "Erro ao atualizar o produto.");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("erro", "Erro interno no servidor.");
+        }
+
+        return "redirect:/telaProduto/lista";
+    }
+
+    @PostMapping("/editarProduto")
+    public String editarProduto(@RequestParam(required = false) Integer idProduto,
+                                @RequestParam String nmProduto,
+                                @RequestParam String deProduto,
+                                @RequestParam int nuPreco,
+                                @RequestParam int qtEstoque,
+                                RedirectAttributes redirectAttributes) {
+
+        Produtos produto = new Produtos();
+        produto.setNmProduto(nmProduto);
+        produto.setDeProduto(deProduto);
+        produto.setNuPreco(nuPreco);
+        produto.setQtEstoque(qtEstoque);
+
+        try {
+            if (idProduto == null || idProduto == -1) {
+                produtosdao.gravar(produto);
+                ProdutosDAO.insereLog("PRODUTOS", ProdutosDAO.TipoOcorrenciaLog.INSERCAO);
+                redirectAttributes.addFlashAttribute("message", "Produto cadastrado com sucesso!");
+            } else {
+                produto.setIdProduto(idProduto);
+                boolean atualizou = produtosdao.atualizar(produto);
+                if (atualizou) {
+                    ProdutosDAO.insereLog("PRODUTOS", ProdutosDAO.TipoOcorrenciaLog.ALTERACAO);
+                    redirectAttributes.addFlashAttribute("message", "Produto atualizado com sucesso!");
+                } else {
+                    redirectAttributes.addFlashAttribute("erro", "Erro ao atualizar o produto.");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("erro", "Erro interno no servidor.");
+        }
+
+        return "redirect:/telaProduto/listaProduto";
+    }
+
+    @PostMapping("/excluirProduto")
+    public String excluirProduto(@RequestParam(required = false) Integer idProduto,
+                                @RequestParam String nmProduto,
+                                @RequestParam String deProduto,
+                                @RequestParam int nuPreco,
+                                @RequestParam int qtEstoque,
+                                RedirectAttributes redirectAttributes) {
+
+        Produtos produto = new Produtos();
+        produto.setNmProduto(nmProduto);
+        produto.setDeProduto(deProduto);
+        produto.setNuPreco(nuPreco);
+        produto.setQtEstoque(qtEstoque);
+
+        try {
+            if (idProduto == null || idProduto == -1) {
+                produtosdao.gravar(produto);
+                ProdutosDAO.insereLog("PRODUTOS", ProdutosDAO.TipoOcorrenciaLog.INSERCAO);
+                redirectAttributes.addFlashAttribute("message", "Produto cadastrado com sucesso!");
+            } else {
+                produto.setIdProduto(idProduto);
+                boolean atualizou = produtosdao.atualizar(produto);
+                if (atualizou) {
+                    ProdutosDAO.insereLog("PRODUTOS", ProdutosDAO.TipoOcorrenciaLog.ALTERACAO);
+                    redirectAttributes.addFlashAttribute("message", "Produto atualizado com sucesso!");
+                } else {
+                    redirectAttributes.addFlashAttribute("erro", "Erro ao atualizar o produto.");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("erro", "Erro interno no servidor.");
+        }
+
+        return "redirect:/telaProduto/listaProduto";
+    }
+
+
+
+    @PostMapping
+    public String validarProduto(@RequestParam Integer idProduto,
+                                 @RequestParam String nmProduto,
+                                 RedirectAttributes redirectAttributes) {
+        Produtos produtos = produtosdao.buscaProduto(idProduto, nmProduto);
+
+        if (produtos != null) {
+            redirectAttributes.addFlashAttribute("message", "Produto validado com sucesso!");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Credenciais inválidas.");
+        }
+
+        return "redirect:/telaProduto";
+    }
+}

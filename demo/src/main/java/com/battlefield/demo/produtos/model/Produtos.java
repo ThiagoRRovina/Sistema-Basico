@@ -33,15 +33,4 @@ public class Produtos {
         this.nuPreco = nuPreco;
         this.qtEstoque = qtEstoque;
     }
-
-    @Override
-    public String toString() {
-        return "Produtos{" +
-                "idProduto=" + idProduto +
-                ", nmProduto='" + nmProduto + '\'' +
-                ", deProduto='" + deProduto + '\'' +
-                ", nuPreco=" + nuPreco +
-                ", qtEstoque=" + qtEstoque +
-                '}';
-    }
 }

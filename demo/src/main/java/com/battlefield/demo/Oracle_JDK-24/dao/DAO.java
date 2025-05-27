@@ -20,7 +20,7 @@ public class DAO {
         try {
             if (entityManagerFactory == null) {
                 System.out.println("Iniciando nova EntityManagerFactory!");
-                entityManagerFactory = Persistence.createEntityManagerFactory("SISTEMANPD-PU-DB2");
+                entityManagerFactory = Persistence.createEntityManagerFactory(null);
             }
             if (entityManager == null) {
                 System.out.println("Criando nova EntityManager!");

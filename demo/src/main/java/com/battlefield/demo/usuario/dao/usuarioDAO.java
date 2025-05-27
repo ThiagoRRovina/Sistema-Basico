@@ -8,17 +8,21 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
+import javax.sql.DataSource;
 
+import java.sql.*;
 import java.util.List;
 
 @Repository
 public class usuarioDAO extends GenericDAO<Usuario, Integer> {
 
+    private final DataSource dataSource;
     @PersistenceContext
     private EntityManager entityManager;
 
-    public usuarioDAO() {
+    public usuarioDAO(DataSource dataSource) {
         super(Usuario.class);
+        this.dataSource = dataSource;
     }
     public Usuario buscarPorEmail(String email) {
         List<Usuario> resultado = entityManager
@@ -54,12 +58,31 @@ public class usuarioDAO extends GenericDAO<Usuario, Integer> {
 
     @Transactional
     public void gravar(Usuario usuario) {
-        if (usuario.getIdUsuario() == null) {
-            entityManager.persist(usuario);
-        } else {
-            entityManager.merge(usuario);
+        String sql = "INSERT INTO usuario (nome, email, endereco, senha, telefone) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            stmt.setString(1, usuario.getNmNome());
+            stmt.setString(2, usuario.getNmEmail());
+            stmt.setString(3, usuario.getNmEndereco());
+            stmt.setString(4, usuario.getNmSenha());
+            stmt.setString(5, usuario.getNmTelefone());
+
+            stmt.executeUpdate();
+
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    usuario.setIdUsuario(rs.getInt(1));
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao inserir usuário", e);
         }
     }
+
+
 
     public enum TipoOcorrenciaLog {
         INSERCAO,

@@ -15,7 +15,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/telaLogin")
 public class usuarioController {
 
-    private usuarioDAO usuarioDAO = new usuarioDAO();
     private final usuarioDAO usuariodao;
 
     public usuarioController(usuarioDAO usuariodao) {
@@ -41,6 +40,7 @@ public class usuarioController {
                          Model model) {
 
 
+
         Usuario usuarioExistente = usuariodao.buscarPorEmail(nmEmail);
         if (usuarioExistente != null && (idusuario == null || !usuarioExistente.getIdUsuario().equals(idusuario))) {
             model.addAttribute("erro", "O email já está registrado.");
@@ -57,7 +57,6 @@ public class usuarioController {
 
         try {
             if (idusuario == null || idusuario == -1) {
-                Integer id = usuarioDAO.incluirAutoincrementando(usuario);
                 usuariodao.gravar(usuario);
                 usuariodao.insereLog("USUARIO", TipoOcorrenciaLog.INSERCAO);
                 System.out.println("Usuário inserido com sucesso.");
@@ -95,7 +94,7 @@ public class usuarioController {
 
         if (usuario != null) {
             redirectAttributes.addFlashAttribute("message", "Login realizado com sucesso!");
-            return "redirect:/telaProduto"; // ou a tela que quiser após login
+            return "Produto/listaProdutos";
         } else {
             redirectAttributes.addFlashAttribute("error", "Credenciais inválidas. Tente novamente.");
             return "redirect:/telaLogin";
