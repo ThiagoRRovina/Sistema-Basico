@@ -11,6 +11,7 @@ import javax.persistence.NoResultException;
 import javax.sql.DataSource;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -81,6 +82,34 @@ public class usuarioDAO extends GenericDAO<Usuario, Integer> {
             throw new RuntimeException("Erro ao inserir usuário", e);
         }
     }
+
+    public List<Usuario> listarTodos() {
+        List<Usuario> lista = new ArrayList<>();
+
+        String sql = "SELECT * FROM usuario";
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Usuario u = new Usuario();
+                u.setIdUsuario(rs.getInt("usuario_id"));
+                u.setNmNome(rs.getString("nome"));
+                u.setNmEmail(rs.getString("email"));
+                u.setNmEndereco(rs.getString("endereco"));
+                u.setNmSenha(rs.getString("senha"));
+                u.setNmTelefone(rs.getString("telefone"));
+                lista.add(u);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+
 
 
 

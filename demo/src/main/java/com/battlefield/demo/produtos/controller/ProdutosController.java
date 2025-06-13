@@ -34,21 +34,24 @@ public class ProdutosController {
     }
 
 
+
     @PostMapping("/salvarProduto")
     public String salvarProduto(@RequestParam(required = false) Integer idProduto,
                                 @RequestParam String nmProduto,
                                 @RequestParam String deProduto,
-                                @RequestParam int nuPreco,
+                                @RequestParam String nuPreco,
                                 @RequestParam int qtEstoque,
                                 RedirectAttributes redirectAttributes) {
-
-        Produtos produto = new Produtos();
-        produto.setNmProduto(nmProduto);
-        produto.setDeProduto(deProduto);
-        produto.setNuPreco(nuPreco);
-        produto.setQtEstoque(qtEstoque);
-
         try {
+
+            int precoCentavos = (int) (Double.parseDouble(nuPreco.replace(".", "").replace(",", ".")) * 100);
+
+            Produtos produto = new Produtos();
+            produto.setNmProduto(nmProduto);
+            produto.setDeProduto(deProduto);
+            produto.setNuPreco(precoCentavos);
+            produto.setQtEstoque(qtEstoque);
+
             if (idProduto == null || idProduto == -1) {
                 produtosdao.gravar(produto);
                 ProdutosDAO.insereLog("PRODUTOS", ProdutosDAO.TipoOcorrenciaLog.INSERCAO);

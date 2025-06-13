@@ -27,6 +27,10 @@ public class usuarioController {
         this.usuariodao = usuariodao;
     }
 
+    @GetMapping("/Home")
+    public String exibirHome() {
+        return "Home/telaHome";
+    }
 
     @GetMapping("/lista")
     public String exibirFormLista(Model model) {
@@ -38,6 +42,12 @@ public class usuarioController {
     @GetMapping
     public String exibirForm() {;
         return "Usuario/telaLogin";
+    }
+    @GetMapping("/listaUsuarios")
+    public String exibirListaUsuarios(Model model) {
+        List<Usuario> usuarios = usuariodao.listarTodos();
+        model.addAttribute("usuarios", usuarios);
+        return "Usuario/listaUsuario";
     }
 
     @PostMapping("/salvar")
@@ -105,7 +115,7 @@ public class usuarioController {
 
         if (usuario != null) {
             redirectAttributes.addFlashAttribute("message", "Login realizado com sucesso!");
-            return "redirect:/telaLogin/lista";
+            return "redirect:/telaLogin/Home";
         } else {
             redirectAttributes.addFlashAttribute("error", "Credenciais inválidas. Tente novamente.");
             return "redirect:/telaLogin";

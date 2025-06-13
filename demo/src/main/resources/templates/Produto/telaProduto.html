@@ -64,10 +64,10 @@
             border-radius: 5px;
         }
 
-        button {
+        .salvar {
             width: 100%;
             padding: 0.8rem;
-            background-color: #484e57;
+            background-color: #4070f5;
             color: #fff;
             border: none;
             border-radius: 7px;
@@ -76,9 +76,28 @@
             transition: 0.3s;
         }
 
-        button:hover {
-            background-color: #333;
+        .salvar:hover {
+            background-color: #445497;
         }
+
+        .cancelar {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: #656566;
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 8px;
+        }
+
+        .cancelar:hover {
+            background-color: #333333;
+        }
+
+
 
         .message {
             margin-bottom: 1rem;
@@ -116,14 +135,33 @@
         <input type="text" id="deProduto" name="deProduto" required th:value="${produto?.deProduto}" />
 
         <label for="nuPreco">Preço:</label>
-        <input type="text" id="nuPreco" name="nuPreco" required th:value="${produto?.nuPreco}" />
+        <input type="text" id="nuPreco" name="nuPreco" required
+               th:value="${produto != null ? #numbers.formatDecimal(produto.nuPreco / 100.0, 1, 'POINT', 2, 'COMMA') : ''}"
+               oninput="formatarNumero(this)" />
+
 
         <label for="qtEstoque">Quantidade em Estoque:</label>
         <input type="text" id="qtEstoque" name="qtEstoque" required th:value="${produto?.qtEstoque}" />
 
-        <button type="submit">Salvar Produto</button>
+        <button class= "salvar" type="submit">Salvar Produto</button>
+    </form>
+    <form th:action="@{/telaProduto/lista}" method="get">
+        <button class="cancelar" type="submit">Cancelar</button>
     </form>
 </div>
 
 </body>
+<script>
+    function formatarNumero(input) {
+        let valor = input.value;
+        valor = valor.replace(/\D/g, '');
+        const numero = (parseInt(valor, 10) / 100).toFixed(2);
+
+        input.value = numero
+            .replace('.', ',')
+            .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
+</script>
+
+
 </html>
