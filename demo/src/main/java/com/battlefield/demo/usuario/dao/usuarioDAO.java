@@ -110,6 +110,21 @@ public class usuarioDAO extends GenericDAO<Usuario, Integer> {
         return lista;
     }
 
+    public boolean excluir(Integer idUsuario) {
+        String sql = "DELETE FROM usuario WHERE usuario_id = ?";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idUsuario);
+            int linhasAfetadas = stmt.executeUpdate();
+            return linhasAfetadas > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao excluir o produto", e);
+        }
+    }
+
 
 
 

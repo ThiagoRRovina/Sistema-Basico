@@ -17,13 +17,12 @@ public class homeController {
     public String exibirHome() {
         return "Home/telaHome";
     }
-    @GetMapping("/Produto")
-    public String exibirProduto() {
-        return "redirect:/telaLogin/lista";
-    }
-    @GetMapping("/login")
-    public String exibirUsuario() {
-        return "/Usuario/listaUsuarios";
-    }
 
+    @GetMapping("/Produto")
+    public String exibirProduto() {return "redirect:/telaProduto/lista";}
+
+    @GetMapping("/Usuario")
+    public String exibirUsuario() {
+        return "redirect:/telaLogin/listaUsuarios";
+    }
 }

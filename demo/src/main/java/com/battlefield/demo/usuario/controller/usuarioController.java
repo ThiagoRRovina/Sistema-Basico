@@ -7,10 +7,7 @@ import com.battlefield.demo.usuario.dao.usuarioDAO.TipoOcorrenciaLog;
 import com.battlefield.demo.usuario.model.Usuario;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -32,22 +29,23 @@ public class usuarioController {
         return "Home/telaHome";
     }
 
-    @GetMapping("/lista")
-    public String exibirFormLista(Model model) {
-        List<Produtos> produtos = produtosdao.listarTodos();
-        model.addAttribute("produtos", produtos);
-        return "Produto/listaProdutos";
-    }
+//    @GetMapping("/lista")
+//    public String exibirFormLista(Model model) {
+//        List<Produtos> produtos = produtosdao.listarTodos();
+//        model.addAttribute("produtos", produtos);
+//        return "Produto/listaProdutos";
+//    }
 
     @GetMapping
-    public String exibirForm() {;
+    public String exibirForm() {
         return "Usuario/telaLogin";
     }
+
     @GetMapping("/listaUsuarios")
     public String exibirListaUsuarios(Model model) {
         List<Usuario> usuarios = usuariodao.listarTodos();
         model.addAttribute("usuarios", usuarios);
-        return "Usuario/listaUsuario";
+        return "Usuario/listaUsuarios";
     }
 
     @PostMapping("/salvar")
@@ -101,6 +99,28 @@ public class usuarioController {
             model.addAttribute("erro", "Erro interno no servidor.");
             return "redirect:/telaLogin";
         }
+    }
+
+
+
+
+    public String limparCampos(Model model) {
+        model.addAttribute("produto", new Produtos());
+        return "Produto/telaProduto";
+    }
+
+    @GetMapping("/excluir/{idUsuario}")
+    public String excluirProduto(@PathVariable("idUsuario") Integer idUsuario, RedirectAttributes redirectAttributes) {
+        try {
+            usuariodao.excluir(idUsuario);
+            usuariodao.insereLog("USUARIO", usuarioDAO.TipoOcorrenciaLog.EXCLUSAO);
+            redirectAttributes.addFlashAttribute("message", "Produto excluído com sucesso!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("erro", "Erro ao excluir o produto.");
+        }
+
+        return "redirect:/telaLogin/listaUsuarios";
     }
 
 
