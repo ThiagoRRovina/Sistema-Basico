@@ -71,8 +71,8 @@ public class usuarioController {
                          @RequestParam String nmEndereco,
                          @RequestParam String nmSenha,
                          @RequestParam String nmTelefone,
-
-                         Model model) {
+                         Model model,
+                         RedirectAttributes redirectAttributes) {
 
 
 
@@ -81,6 +81,7 @@ public class usuarioController {
             model.addAttribute("erro", "O email já está registrado.");
             return "redirect:/telaLogin";
         }
+
         nmSenha=hashSenha(nmSenha);
         Usuario usuario = new Usuario();
         usuario.setNmNome(nmNome);
@@ -88,9 +89,6 @@ public class usuarioController {
         usuario.setNmEndereco(nmEndereco);
         usuario.setNmSenha(nmSenha);
         usuario.setNmTelefone(nmTelefone);
-
-
-
 
 
         try {
@@ -152,7 +150,9 @@ public class usuarioController {
         Usuario usuario = usuariodao.validaLogin(nmEmail, nmSenha);
         System.out.printf("\nEmail: %s \nSenha: %s\n", nmEmail, nmSenha);
 
-        if (usuario != null) {
+        Usuario usuarioExistente = usuariodao.buscarPorEmail(nmEmail);
+
+        if (usuarioExistente != null && passwordEncoder.matches(nmSenha, usuarioExistente.getNmSenha())) {
             redirectAttributes.addFlashAttribute("message", "Login realizado com sucesso!");
             return "redirect:/telaLogin/Home";
         } else {
