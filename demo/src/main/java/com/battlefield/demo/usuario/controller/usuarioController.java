@@ -147,12 +147,9 @@ public class usuarioController {
                                @RequestParam String nmSenha,
                                RedirectAttributes redirectAttributes) {
 
-        Usuario usuario = usuariodao.validaLogin(nmEmail, nmSenha);
-        System.out.printf("\nEmail: %s \nSenha: %s\n", nmEmail, nmSenha);
+        Usuario usuario = usuariodao.buscarPorEmail(nmEmail);
 
-        Usuario usuarioExistente = usuariodao.buscarPorEmail(nmEmail);
-
-        if (usuarioExistente != null && passwordEncoder.matches(nmSenha, usuarioExistente.getNmSenha())) {
+        if (usuario != null && passwordEncoder.matches(nmSenha, usuario.getNmSenha())) {
             redirectAttributes.addFlashAttribute("message", "Login realizado com sucesso!");
             return "redirect:/telaLogin/Home";
         } else {
