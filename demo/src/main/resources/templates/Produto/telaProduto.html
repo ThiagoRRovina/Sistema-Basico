@@ -5,13 +5,25 @@
     <title>Cadastro de Produto - Rovina Store</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Boxicons e Fonte -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
-    <!-- Google Fonts -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+
+        :root {
+            --primary-color: #007bff;
+            --primary-dark: #0056b3;
+            --secondary-color: #6c757d;
+            --header-bg: #343a40;
+            --header-text: #ffffff;
+            --body-bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --input-border: #ced4da;
+            --button-save-bg: #28a745;
+            --button-save-hover: #218838;
+            --button-cancel-bg: #dc3545;
+            --button-cancel-hover: #c82333;
+        }
 
         * {
             font-family: 'Montserrat', sans-serif;
@@ -21,109 +33,104 @@
         }
 
         body {
-            background-color: #f4f4f4;
+            background-color: var(--body-bg);
             padding: 2rem;
             color: #333;
+            line-height: 1.6;
         }
 
         header {
-            background: #e7e4e4;
-            padding: 1.5rem;
-            text-align: center;
-            font-family: 'Orbitron', sans-serif;
+            background: var(--header-bg);
+            padding: 2.5rem 2rem;
+            text-align: left;
             font-size: 2.5rem;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            color: var(--header-text);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            margin-bottom: 2rem;
+            border-radius: 8px;
         }
 
         .container {
             max-width: 600px;
             margin: 2rem auto;
-            background: #fff;
-            padding: 2rem;
+            background: var(--card-bg);
+            padding: 2.5rem;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
         }
 
         h2 {
             text-align: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            color: #2c3e50;
         }
 
         label {
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.6rem;
             font-weight: 600;
+            color: #555;
+            font-size: 0.95rem;
         }
 
         input[type="text"],
         input[type="number"] {
             width: 100%;
-            padding: 0.6rem;
-            margin-bottom: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            padding: 0.9rem 1rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            font-size: 1rem;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .salvar {
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            outline: none;
+        }
+
+        .btn-form {
             width: 100%;
-            padding: 0.8rem;
-            background-color: #4070f5;
+            padding: 1rem;
             color: #fff;
             border: none;
             border-radius: 7px;
-            font-size: 1rem;
+            font-size: 1.1rem;
             cursor: pointer;
-            transition: 0.3s;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
 
-        .salvar:hover {
-            background-color: #445497;
+        .btn-save {
+            background-color: var(--button-save-bg);
+            margin-bottom: 0.75rem;
         }
 
-        .cancelar {
-            width: 100%;
-            padding: 0.8rem;
-            background-color: #656566;
-            color: #fff;
-            border: none;
-            border-radius: 7px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 8px;
+        .btn-save:hover {
+            background-color: var(--button-save-hover);
+            transform: translateY(-2px);
         }
 
-        .cancelar:hover {
-            background-color: #333333;
+        .btn-cancel {
+            background-color: var(--button-cancel-bg);
         }
 
-
-
-        .message {
-            margin-bottom: 1rem;
-            padding: 0.8rem;
-            border-radius: 5px;
-        }
-
-        .message.success {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        .message.error {
-            background-color: #f8d7da;
-            color: #721c24;
+        .btn-cancel:hover {
+            background-color: var(--button-cancel-hover);
+            transform: translateY(-2px);
         }
     </style>
 </head>
 <body>
 
-<header>Rovina Store</header>
+<header>Basic System</header>
 
 <div class="container">
     <h2>Cadastro de Produto</h2>
-
-
 
     <form th:action="@{/telaProduto/salvarProduto}" method="post">
         <input type="hidden" name="idProduto" th:value="${produto?.idProduto}" />
@@ -139,14 +146,13 @@
                th:value="${produto != null ? #numbers.formatDecimal(produto.nuPreco / 100.0, 1, 'POINT', 2, 'COMMA') : ''}"
                oninput="formatarNumero(this)" />
 
-
         <label for="qtEstoque">Quantidade em Estoque:</label>
         <input type="text" id="qtEstoque" name="qtEstoque" required th:value="${produto?.qtEstoque}" />
 
-        <button class= "salvar" type="submit">Salvar Produto</button>
+        <button class="btn-form btn-save" type="submit">Salvar Produto</button>
     </form>
     <form th:action="@{/telaProduto/lista}" method="get">
-        <button class="cancelar" type="submit">Cancelar</button>
+        <button class="btn-form btn-cancel" type="submit">Cancelar</button>
     </form>
 </div>
 
@@ -162,6 +168,4 @@
             .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     }
 </script>
-
-
 </html>

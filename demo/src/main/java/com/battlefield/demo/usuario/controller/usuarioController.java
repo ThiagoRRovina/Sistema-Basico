@@ -5,11 +5,15 @@ import com.battlefield.demo.produtos.model.Produtos;
 import com.battlefield.demo.usuario.dao.usuarioDAO;
 import com.battlefield.demo.usuario.dao.usuarioDAO.TipoOcorrenciaLog;
 import com.battlefield.demo.usuario.model.Usuario;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import com.battlefield.demo.usuario.SecurityConfig;
 
+import javax.swing.*;
 import java.util.List;
 
 @Controller
@@ -18,11 +22,14 @@ public class usuarioController {
 
     private final ProdutosDAO produtosdao;
     private final usuarioDAO usuariodao;
+    private final PasswordEncoder passwordEncoder;
 
-    public usuarioController(ProdutosDAO produtosdao, usuarioDAO usuariodao) {
+    public usuarioController(ProdutosDAO produtosdao, usuarioDAO usuariodao, PasswordEncoder passwordEncoder) {
         this.produtosdao = produtosdao;
         this.usuariodao = usuariodao;
+        this.passwordEncoder = passwordEncoder;
     }
+
 
     @GetMapping("/Home")
     public String exibirHome() {
@@ -48,6 +55,15 @@ public class usuarioController {
         return "Usuario/listaUsuarios";
     }
 
+
+    public String hashSenha(String senhaEmTextoSimples) {
+        if (senhaEmTextoSimples == null || senhaEmTextoSimples.isEmpty()) {
+            throw new IllegalArgumentException("A senha não pode ser nula ou vazia.");
+        }
+        System.out.println(senhaEmTextoSimples);
+        return passwordEncoder.encode(senhaEmTextoSimples);
+    }
+    
     @PostMapping("/salvar")
     public String salvar(@RequestParam(required = false) Integer idusuario,
                          @RequestParam String nmNome,
@@ -65,13 +81,16 @@ public class usuarioController {
             model.addAttribute("erro", "O email já está registrado.");
             return "redirect:/telaLogin";
         }
-
+        nmSenha=hashSenha(nmSenha);
         Usuario usuario = new Usuario();
         usuario.setNmNome(nmNome);
         usuario.setNmEmail(nmEmail);
         usuario.setNmEndereco(nmEndereco);
         usuario.setNmSenha(nmSenha);
         usuario.setNmTelefone(nmTelefone);
+
+
+
 
 
         try {
