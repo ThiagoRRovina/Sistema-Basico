@@ -36,20 +36,25 @@
     }
 
     body {
-      background-color: #f8f9fa;
+      background-color: var(--body-bg);
+      padding: 2rem;
+      color: #333;
+      line-height: 1.6;
     }
 
-    .navbar {
-      background-color: #343a40;
-      padding: 15px 0;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .navbar-brand {
-      color: #ffffff !important;
+    header {
+      background: var(--header-bg);
+      padding: 2.5rem 2rem;
+      text-align: left;
+      font-family: 'Orbitron', sans-serif;
       font-size: 2.5rem;
-      font-weight: 700;
-      margin-left: 20px;
+      color: var(--header-text);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 8px;
     }
 
     header .title {
@@ -182,7 +187,8 @@
       width: 35%;
     }
 
-    .preco, .estoque {
+    .preco,
+    .estoque {
       width: 10%;
       white-space: nowrap;
     }
@@ -201,11 +207,12 @@
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Basic System</a>
-  </div>
-</nav>
+
+<header>
+  <div class="title">Basic System</div>
+  <a th:href="@{/Home}" class="btn-back">Voltar</a>
+</header>
+
 <div class="container">
   <div class="top-bar">
     <h2>Produtos Cadastrados</h2>
@@ -231,8 +238,7 @@
       <td>R$ <span th:text="${#numbers.formatDecimal(produto.nuPreco / 100.0, 1, 'COMMA', 2, 'POINT')}">0,00</span></td>
       <td th:text="${produto.qtEstoque}">0</td>
       <td class="acoes">
-        <a th:href="@{/telaProduto/editar/{idProduto}(idProduto=${produto.idProduto})}"
-           class="btn btn-edit">Editar</a>
+        <a th:href="@{/telaProduto/editar/{idProduto}(idProduto=${produto.idProduto})}" class="btn btn-edit">Editar</a>
         <a th:href="@{/telaProduto/excluir/{idProduto}(idProduto=${produto.idProduto})}"
            class="btn btn-delete"
            onclick="return confirm('Tem certeza que deseja excluir este produto?');">Excluir</a>
@@ -246,5 +252,4 @@
 </div>
 
 </body>
-
 </html>
