@@ -82,6 +82,8 @@ public class usuarioController {
             return "redirect:/telaLogin";
         }
 
+
+
         nmSenha=hashSenha(nmSenha);
         Usuario usuario = new Usuario();
         usuario.setNmNome(nmNome);
