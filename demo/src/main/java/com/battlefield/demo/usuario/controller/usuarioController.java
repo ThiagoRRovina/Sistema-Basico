@@ -36,12 +36,6 @@ public class usuarioController {
         return "Home/telaHome";
     }
 
-//    @GetMapping("/lista")
-//    public String exibirFormLista(Model model) {
-//        List<Produtos> produtos = produtosdao.listarTodos();
-//        model.addAttribute("produtos", produtos);
-//        return "Produto/listaProdutos";
-//    }
 
     @GetMapping
     public String exibirForm() {
@@ -81,6 +75,8 @@ public class usuarioController {
             model.addAttribute("erro", "O email já está registrado.");
             return "redirect:/telaLogin";
         }
+
+
 
         nmSenha=hashSenha(nmSenha);
         Usuario usuario = new Usuario();
