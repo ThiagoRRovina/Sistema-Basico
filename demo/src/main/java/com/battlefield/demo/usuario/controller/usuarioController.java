@@ -105,8 +105,8 @@ public class usuarioController {
 
 
     public String limparCampos(Model model) {
-        model.addAttribute("produto", new Produtos());
-        return "Produto/telaProduto";
+        model.addAttribute("usuario", new Produtos());
+        return "Usuario/listaUsuarios";
     }
 
     @GetMapping("/excluir/{idUsuario}")
@@ -114,10 +114,10 @@ public class usuarioController {
         try {
             usuariodao.excluir(idUsuario);
             usuariodao.insereLog("USUARIO", usuarioDAO.TipoOcorrenciaLog.EXCLUSAO);
-            redirectAttributes.addFlashAttribute("message", "Produto excluído com sucesso!");
+            redirectAttributes.addFlashAttribute("message", "Usuario excluído com sucesso!");
         } catch (Exception e) {
             e.printStackTrace();
-            redirectAttributes.addFlashAttribute("erro", "Erro ao excluir o produto.");
+            redirectAttributes.addFlashAttribute("erro", "Erro ao excluir o usuario.");
         }
 
         return "redirect:/telaLogin/listaUsuarios";
