@@ -24,6 +24,13 @@
             margin-left: 20px;
         }
 
+        .navbar-opcao {
+            color: #ffffff !important;
+            font-size: 12px;
+            font-weight: 700;
+            margin-left: 20px;
+        }
+
         .content-section {
             padding: 60px 0;
             text-align: center;
@@ -62,7 +69,15 @@
 <body>
 <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">Basic System</a>
+        <a class="navbar-brand">Basic System</a>
+    </div>
+</nav>
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <ul class="justify-content-between navbar-nav">
+            <a class="navbar-brand" th:action="@{/Home/Produto}" method="get" style="font-size: 18px; cursor: pointer;">Produtos</a>
+            <a class="navbar-brand" style="font-size: 18px; cursor: pointer;">Usuarios</a>
+        </ul>
     </div>
 </nav>
 
@@ -81,10 +96,7 @@
         </div>
     </div>
     <div class="content-section">
-        <form action="" class="row g-3">
-            <h1>teste</h1>
 
-        </form>
     </div>
 
 

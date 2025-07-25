@@ -227,8 +227,7 @@
             <td th:text="${usuario.nmEmail}">Email do Usuário</td>
             <td th:text="${usuario.nmEndereco}">Endereço do Usuário</td>
             <td th:text="${usuario.nmTelefone}">Telefone do Usuário</td>
-            <td class="col-actions">
-                <a th:href="@{/telaLogin/editar/{id}(id=${usuario.idUsuario})}" class="btn btn-edit">Editar</a>
+            <td class="col-actions justify-content-end text-end">
                 <a th:href="@{/telaLogin/excluir/{id}(id=${usuario.idUsuario})}" class="btn btn-delete"
                    onclick="return confirm('Tem certeza que deseja excluir este usuário?');">Excluir</a>
             </td>
