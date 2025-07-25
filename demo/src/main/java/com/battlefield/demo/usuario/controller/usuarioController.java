@@ -63,7 +63,7 @@ public class usuarioController {
         System.out.println(senhaEmTextoSimples);
         return passwordEncoder.encode(senhaEmTextoSimples);
     }
-    
+
     @PostMapping("/salvar")
     public String salvar(@RequestParam(required = false) Integer idusuario,
                          @RequestParam String nmNome,
