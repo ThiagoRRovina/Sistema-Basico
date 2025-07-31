@@ -41,6 +41,8 @@ public class ProdutosController {
                                 @RequestParam String deProduto,
                                 @RequestParam String nuPreco,
                                 @RequestParam int qtEstoque,
+                                @RequestParam(required = false) String imagemProduto,     //adicinar salvar imagem
+                                Model model,
                                 RedirectAttributes redirectAttributes) {
         try {
 
@@ -69,6 +71,8 @@ public class ProdutosController {
 
         return "redirect:/telaProduto/lista";
     }
+
+
 
 
     @GetMapping("/editar/{idProduto}")

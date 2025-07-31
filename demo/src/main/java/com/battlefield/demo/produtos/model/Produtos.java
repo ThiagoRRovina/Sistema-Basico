@@ -26,11 +26,16 @@ public class Produtos {
     @Column(name = "QT_ESTOQUE")
     private int qtEstoque;
 
+    @Column(name = "IMAGEM_PRODUTO")
+    private String imagemProduto;
+
+
     public Produtos() {
         this.idProduto = idProduto;
         this.nmProduto = nmProduto;
         this.deProduto = deProduto;
         this.nuPreco = nuPreco;
         this.qtEstoque = qtEstoque;
+        this.imagemProduto = imagemProduto;
     }
 }
