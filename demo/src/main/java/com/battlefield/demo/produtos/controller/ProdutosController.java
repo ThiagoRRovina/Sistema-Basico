@@ -5,8 +5,13 @@ import com.battlefield.demo.produtos.model.Produtos;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Controller
@@ -41,8 +46,7 @@ public class ProdutosController {
                                 @RequestParam String deProduto,
                                 @RequestParam String nuPreco,
                                 @RequestParam int qtEstoque,
-                                @RequestParam(required = false) String imagemProduto,     //adicinar salvar imagem
-                                Model model,
+                                @RequestParam("imagemProduto") MultipartFile imagemProduto,
                                 RedirectAttributes redirectAttributes) {
         try {
 
@@ -53,6 +57,41 @@ public class ProdutosController {
             produto.setDeProduto(deProduto);
             produto.setNuPreco(precoCentavos);
             produto.setQtEstoque(qtEstoque);
+
+            if (imagemProduto != null && !imagemProduto.isEmpty()) {
+                try {
+
+                    String uploadDir = "src/main/resources/";
+
+                    Path uploadPath = Paths.get(uploadDir);
+                    if (!Files.exists(uploadPath)) {
+                        Files.createDirectories(uploadPath);
+                    }
+
+                    // Create unique filename to avoid conflicts
+                    String originalFilename = imagemProduto.getOriginalFilename();
+                    String fileExtension = "";
+                    if (originalFilename != null && originalFilename.contains(".")) {
+                        fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+                    }
+                    String uniqueFilename = System.currentTimeMillis() + "_" + nmProduto.replaceAll("[^a-zA-Z0-9]", "_") + fileExtension;
+
+                    Path filePath = uploadPath.resolve(uniqueFilename);
+                    imagemProduto.transferTo(filePath.toFile());
+                    produto.setImagemProduto(uniqueFilename);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    redirectAttributes.addFlashAttribute("erro", "Erro ao salvar a imagem do produto.");
+                    return "redirect:/telaProduto/lista";
+                }
+            } else if (idProduto != null && idProduto != -1) {
+                // If editing and no new image provided, keep the existing image
+                Produtos produtoExistente = produtosdao.buscarPorId(idProduto);
+                if (produtoExistente != null) {
+                    produto.setImagemProduto(produtoExistente.getImagemProduto());
+                }
+            }
 
             if (idProduto == null || idProduto == -1) {
                 produtosdao.gravar(produto);
@@ -71,8 +110,6 @@ public class ProdutosController {
 
         return "redirect:/telaProduto/lista";
     }
-
-
 
 
     @GetMapping("/editar/{idProduto}")

@@ -89,7 +89,8 @@
         }
 
         input[type="text"],
-        input[type="number"] {
+        input[type="number"],
+        input[type="file"] {
             width: 100%;
             padding: 0.9rem 1rem;
             margin-bottom: 1.5rem;
@@ -101,7 +102,8 @@
         }
 
         input[type="text"]:focus,
-        input[type="number"]:focus {
+        input[type="number"]:focus,
+        input[type="file"]:focus {
             border-color: var(--primary-color);
             box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
             outline: none;
@@ -175,7 +177,7 @@
 </nav>
 <div class="container">
     <h2>Cadastro de Produto</h2>
-    <form th:action="@{/telaProduto/salvarProduto}" method="post">
+    <form th:action="@{/telaProduto/salvarProduto}" method="post" enctype="multipart/form-data">
         <input type="hidden" name="idProduto" th:value="${produto?.idProduto}" />
 
         <label for="nmProduto">Nome do Produto:</label>
@@ -191,6 +193,9 @@
 
         <label for="qtEstoque">Quantidade em Estoque:</label>
         <input type="text" id="qtEstoque" name="qtEstoque" required th:value="${produto?.qtEstoque}" />
+
+        <label for="imagemProduto">Imagem do Produto:</label>
+        <input type="file" id="imagemProduto" name="imagemProduto" accept="image/*" />
 
         <button class="btn-form btn-save" type="submit">Salvar Produto</button>
     </form>

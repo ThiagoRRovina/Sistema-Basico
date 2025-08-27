@@ -27,15 +27,9 @@ public class Produtos {
     private int qtEstoque;
 
     @Column(name = "IMAGEM_PRODUTO")
-    private String imagemProduto;
-
+    private String ImagemProduto;
 
     public Produtos() {
-        this.idProduto = idProduto;
-        this.nmProduto = nmProduto;
-        this.deProduto = deProduto;
-        this.nuPreco = nuPreco;
-        this.qtEstoque = qtEstoque;
-        this.imagemProduto = imagemProduto;
+        // Default constructor - Lombok will handle getters/setters
     }
 }
