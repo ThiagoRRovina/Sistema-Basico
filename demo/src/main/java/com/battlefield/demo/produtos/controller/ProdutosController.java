@@ -2,6 +2,9 @@ package com.battlefield.demo.produtos.controller;
 
 import com.battlefield.demo.produtos.dao.ProdutosDAO;
 import com.battlefield.demo.produtos.model.Produtos;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,13 +35,6 @@ public class ProdutosController {
         return "Produto/telaProduto";
     }
 
-//    @GetMapping("/editar")
-//    public String editProduto(Model model) {
-//        model.addAttribute("produto", new Produtos());
-//        return "Produto/telaProduto";
-//    }
-
-
     // Tela de listagem
     @GetMapping("/lista")
     public String exibirFormLista(Model model) {
@@ -54,11 +50,7 @@ public class ProdutosController {
                                 @RequestParam String deProduto,
                                 @RequestParam String nuPreco,
                                 @RequestParam int qtEstoque,
-<<<<<<< Updated upstream
-                                @RequestParam("imagemProduto") MultipartFile imagemProduto,
-=======
                                 @RequestParam(required = false) MultipartFile imagemProduto,
->>>>>>> Stashed changes
                                 RedirectAttributes redirectAttributes) {
         try {
             int precoCentavos = (int) (Double.parseDouble(nuPreco.replace(".", "").replace(",", ".")) * 100);
@@ -70,43 +62,30 @@ public class ProdutosController {
             produto.setQtEstoque(qtEstoque);
 
             if (imagemProduto != null && !imagemProduto.isEmpty()) {
-<<<<<<< Updated upstream
-                try {
+                String uploadDir = "D:/Gerenciador/ProjectOd/Sistema-Basico/demo/uploads/";
 
-                    String uploadDir = "src/main/resources/";
-
-                    Path uploadPath = Paths.get(uploadDir);
-                    if (!Files.exists(uploadPath)) {
-                        Files.createDirectories(uploadPath);
-                    }
-
-                    // Create unique filename to avoid conflicts
-                    String originalFilename = imagemProduto.getOriginalFilename();
-                    String fileExtension = "";
-                    if (originalFilename != null && originalFilename.contains(".")) {
-                        fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
-                    }
-                    String uniqueFilename = System.currentTimeMillis() + "_" + nmProduto.replaceAll("[^a-zA-Z0-9]", "_") + fileExtension;
-
-                    Path filePath = uploadPath.resolve(uniqueFilename);
-                    imagemProduto.transferTo(filePath.toFile());
-                    produto.setImagemProduto(uniqueFilename);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    redirectAttributes.addFlashAttribute("erro", "Erro ao salvar a imagem do produto.");
-                    return "redirect:/telaProduto/lista";
+                Path uploadPath = Paths.get(uploadDir);
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
                 }
+
+                String originalFilename = imagemProduto.getOriginalFilename();
+                String fileExtension = "";
+                if (originalFilename != null && originalFilename.contains(".")) {
+                    fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+                }
+                String uniqueFilename = System.currentTimeMillis() + "_" +
+                        nmProduto.replaceAll("[^a-zA-Z0-9]", "_") + fileExtension;
+
+                Path filePath = uploadPath.resolve(uniqueFilename);
+                imagemProduto.transferTo(filePath.toFile());
+
+                produto.setImagemProduto(uniqueFilename); // só nome no banco
             } else if (idProduto != null && idProduto != -1) {
-                // If editing and no new image provided, keep the existing image
                 Produtos produtoExistente = produtosdao.buscarPorId(idProduto);
                 if (produtoExistente != null) {
                     produto.setImagemProduto(produtoExistente.getImagemProduto());
                 }
-=======
-                byte[] bytes = imagemProduto.getBytes();
-                produto.setImagemProduto(bytes);
->>>>>>> Stashed changes
             }
 
             if (idProduto == null || idProduto == -1) {
@@ -127,11 +106,7 @@ public class ProdutosController {
         return "redirect:/telaProduto/lista";
     }
 
-<<<<<<< Updated upstream
-
-=======
     // Editar produto
->>>>>>> Stashed changes
     @GetMapping("/editar/{idProduto}")
     public String editarProduto(@PathVariable Integer idProduto, Model model, RedirectAttributes redirectAttributes) {
         try {
@@ -165,7 +140,7 @@ public class ProdutosController {
         return "redirect:/telaProduto/lista";
     }
 
-    // Validar produto (se precisar em outra lógica sua)
+    // Validar produto (caso necessário em outra lógica sua)
     @PostMapping
     public String validarProduto(@RequestParam Integer idProduto,
                                  @RequestParam String nmProduto,
@@ -181,18 +156,19 @@ public class ProdutosController {
         return "redirect:/telaProduto";
     }
 
-    // Exibir imagem do produto
-    @GetMapping("/imagem/{idProduto}")
-    @ResponseBody
-    public ResponseEntity<byte[]> exibirImagem(@PathVariable Integer idProduto) {
-        Produtos produto = produtosdao.buscarPorId(idProduto);
+    @GetMapping("/imagem/{nome}")
+    public ResponseEntity<byte[]> exibirImagem(@PathVariable("nome") String nomeDoArquivo) throws IOException {
+        String uploadDir = "D:/Gerenciador/ProjectOd/Sistema-Basico/demo/uploads/";
+        Path filePath = Paths.get(uploadDir, nomeDoArquivo);
 
-        if (produto == null || produto.getImagemProduto() == null) {
+        if(!Files.exists(filePath)) {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok()
-                .header("Content-Type", "image/jpeg")
-                .body(produto.getImagemProduto());
+        byte[] bytes = Files.readAllBytes(filePath);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+        return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
     }
+
 }

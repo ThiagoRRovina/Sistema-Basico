@@ -28,12 +28,7 @@ public class Produtos {
 
     @Lob
     @Column(name = "IMAGEM_PRODUTO")
-<<<<<<< Updated upstream
     private String ImagemProduto;
-=======
-    private byte[] imagemProduto;
-
->>>>>>> Stashed changes
 
     public Produtos() {
         // Default constructor - Lombok will handle getters/setters
