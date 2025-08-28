@@ -272,7 +272,6 @@
       }
     }
 
-
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -434,8 +433,9 @@
       const cardWrapper = document.createElement('div');
       cardWrapper.className = 'product-card-item';
 
-
-      const imagemCapa = produto.nmImagemProduto && produto.nmImagemProduto !== '' ? produto.nmImagemProduto : '../imagens/placeholder-produto.jpg'; // Altere para um placeholder de produto, se tiver
+      const imagemCapa = produto.imagemProduto
+              ? `/telaProduto/imagem/${produto.idProduto}`
+              : '../imagens/placeholder-produto.jpg';
 
       cardWrapper.innerHTML = `
         <div class="product-card">
@@ -454,7 +454,6 @@
             </div>
         </div>
       `;
-
 
       cardWrapper.querySelector('.btn-edit').addEventListener('click', function() {
         window.location.href = `/telaProduto/editar/${produto.idProduto}`;
@@ -509,6 +508,7 @@
     });
 
     carregarProdutos();
+
   });
 </script>
 </body>

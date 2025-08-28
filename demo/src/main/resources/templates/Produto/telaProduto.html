@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Cadastro de Produto - Rovina Store</title>
@@ -8,17 +9,9 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
 
         :root {
             --primary-color: #007bff;
-            --primary-dark: #0056b3;
-            --secondary-color: #6c757d;
-            --header-bg: #343a40;
-            --header-text: #ffffff;
-            --body-bg: #f8f9fa;
-            --card-bg: #ffffff;
-            --input-border: #ced4da;
             --button-save-bg: #28a745;
             --button-save-hover: #218838;
             --button-cancel-bg: #dc3545;
@@ -26,23 +19,20 @@
         }
 
         body {
-            background-color: var(--body-bg);
-            color: #333;
-            line-height: 1.6;
+            background-color: #f8f9fa;
+            font-family: 'Montserrat', sans-serif;
         }
-
 
         .navbar {
             background-color: #343a40;
             padding: 15px 0;
-
         }
 
         .navbar-opcoes {
             background-color: #343a40;
             padding: 15px 0;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 47px;
+            margin-bottom: 42px;
         }
 
         .navbar-brand {
@@ -51,6 +41,7 @@
             font-weight: 700;
             margin-left: 20px;
         }
+
 
         .navbar-nav .nav-link {
             color: #ffffff !important;
@@ -65,32 +56,29 @@
             color: #ced4da !important;
         }
 
-
         .container {
-            margin: 2rem auto;
-            background: var(--card-bg);
-            padding: 2.5rem;
+            background: #fff;
+            padding: 2rem;
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
         }
 
         h2 {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
             color: #2c3e50;
         }
 
         label {
-            display: block;
-            margin-bottom: 0.6rem;
             font-weight: 600;
-            color: #555;
-            font-size: 0.95rem;
+            margin-top: 10px;
         }
 
         input[type="text"],
         input[type="number"],
         input[type="file"] {
+<<<<<<< Updated upstream
             width: 100%;
             padding: 0.9rem 1rem;
             margin-bottom: 1.5rem;
@@ -120,31 +108,49 @@
             transition: background-color 0.3s ease, transform 0.2s ease;
             font-weight: 600;
             letter-spacing: 0.5px;
+=======
+            margin-bottom: 1rem;
+>>>>>>> Stashed changes
         }
 
         .btn-save {
             background-color: var(--button-save-bg);
-            margin-bottom: 0.75rem;
+            color: #fff;
+            font-weight: 600;
         }
 
         .btn-save:hover {
             background-color: var(--button-save-hover);
-            transform: translateY(-2px);
         }
 
         .btn-cancel {
             background-color: var(--button-cancel-bg);
+            color: #fff;
+            font-weight: 600;
         }
 
         .btn-cancel:hover {
             background-color: var(--button-cancel-hover);
-            transform: translateY(-2px);
         }
 
+        .preview-box {
+            border: 1px dashed #ced4da;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        #previewImagem {
+            max-height: 200px;
+            object-fit: contain;
+        }
     </style>
 </head>
+
 <body>
 
+<!-- Navbar principal -->
 <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
         <a class="navbar-brand">Basic System</a>
@@ -175,25 +181,34 @@
         </div>
     </div>
 </nav>
+
+
 <div class="container">
     <h2>Cadastro de Produto</h2>
     <form th:action="@{/telaProduto/salvarProduto}" method="post" enctype="multipart/form-data">
         <input type="hidden" name="idProduto" th:value="${produto?.idProduto}" />
 
-        <label for="nmProduto">Nome do Produto:</label>
-        <input type="text" id="nmProduto" name="nmProduto" required th:value="${produto?.nmProduto}" />
+        <div class="row">
+            <div class="col-md-6">
+                <label for="nmProduto">Nome do Produto:</label>
+                <input type="text" id="nmProduto" name="nmProduto" class="form-control" required
+                       th:value="${produto?.nmProduto}" />
 
-        <label for="deProduto">Descrição:</label>
-        <input type="text" id="deProduto" name="deProduto" required th:value="${produto?.deProduto}" />
+                <label for="deProduto">Descrição:</label>
+                <input type="text" id="deProduto" name="deProduto" class="form-control" required
+                       th:value="${produto?.deProduto}" />
 
-        <label for="nuPreco">Preço:</label>
-        <input type="text" id="nuPreco" class="inputPreco" name="nuPreco" required
-               th:value="${produto != null ? #numbers.formatDecimal(produto.nuPreco / 100.0, 1, 'POINT', 2, 'COMMA') : ''}"
-               oninput="formatarNumero(this)" />
+                <label for="nuPreco">Preço:</label>
+                <input type="text" id="nuPreco" name="nuPreco" class="form-control" required
+                       th:value="${produto != null ? #numbers.formatDecimal(produto.nuPreco / 100.0, 1, 'POINT', 2, 'COMMA') : ''}"
+                       oninput="formatarNumero(this)" />
 
-        <label for="qtEstoque">Quantidade em Estoque:</label>
-        <input type="text" id="qtEstoque" name="qtEstoque" required th:value="${produto?.qtEstoque}" />
+                <label for="qtEstoque">Quantidade em Estoque:</label>
+                <input type="text" id="qtEstoque" name="qtEstoque" class="form-control" required
+                       th:value="${produto?.qtEstoque}" />
+            </div>
 
+<<<<<<< Updated upstream
         <label for="imagemProduto">Imagem do Produto:</label>
         <input type="file" id="imagemProduto" name="imagemProduto" accept="image/*" />
 
@@ -201,31 +216,48 @@
     </form>
     <form th:action="@{/telaProduto/lista}" method="get">
         <button class="btn-form btn-cancel" type="submit">Cancelar</button>
+=======
+            <div class="col-md-6 d-flex flex-column align-items-center justify-content-center">
+                <div class="preview-box w-100">
+                    <img id="previewImagem" src="#" alt="Pré-visualização" class="img-fluid d-none mb-2">
+                    <input type="file" id="imagemProduto" name="imagemProduto" accept="image/*" class="form-control">
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-3 mt-4">
+            <button type="submit" class="btn btn-save">Salvar Produto</button>
+            <a href="/telaProduto/lista" class="btn btn-cancel">Cancelar</a>
+        </div>
+>>>>>>> Stashed changes
     </form>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('nav-produtos').onclick = function() {
-            window.location.href = "/Home/Produto";
-        };
-        document.getElementById('nav-usuarios').onclick = function() {
-            window.location.href = "/Home/Usuario";
-        };
-    });
-
+    document.getElementById('nav-produtos').onclick = () => window.location.href = "/Home/Produto";
+    document.getElementById('nav-usuarios').onclick = () => window.location.href = "/Home/Usuario";
 
     function formatarNumero(input) {
-        let valor = input.value;
-        valor = valor.replace(/\D/g, '');
-        const numero = (parseInt(valor, 10) / 100).toFixed(2);
-
-        input.value = numero
-            .replace('.', ',')
-            .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        let valor = input.value.replace(/\D/g, '');
+        const numero = (parseInt(valor || 0, 10) / 100).toFixed(2);
+        input.value = numero.replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     }
+
+    // Preview da imagem
+    document.getElementById('imagemProduto').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById('previewImagem');
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                preview.src = e.target.result;
+                preview.classList.remove('d-none');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 </script>
 </body>
+
 </html>

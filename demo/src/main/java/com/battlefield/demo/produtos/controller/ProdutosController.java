@@ -2,6 +2,7 @@ package com.battlefield.demo.produtos.controller;
 
 import com.battlefield.demo.produtos.dao.ProdutosDAO;
 import com.battlefield.demo.produtos.model.Produtos;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,18 +20,26 @@ import java.util.List;
 public class ProdutosController {
 
     private final ProdutosDAO produtosdao;
-    private final ProdutosDAO produtosDAO;
 
-    public ProdutosController(ProdutosDAO produtosdao, ProdutosDAO produtosDAO) {
+    public ProdutosController(ProdutosDAO produtosdao) {
         this.produtosdao = produtosdao;
-        this.produtosDAO = produtosDAO;
     }
 
+    // Tela de cadastro de produto
     @GetMapping
-    public String exibirForm() {
+    public String exibirForm(Model model) {
+        model.addAttribute("produto", new Produtos());
         return "Produto/telaProduto";
     }
 
+//    @GetMapping("/editar")
+//    public String editProduto(Model model) {
+//        model.addAttribute("produto", new Produtos());
+//        return "Produto/telaProduto";
+//    }
+
+
+    // Tela de listagem
     @GetMapping("/lista")
     public String exibirFormLista(Model model) {
         List<Produtos> produtos = produtosdao.listarTodos();
@@ -38,18 +47,20 @@ public class ProdutosController {
         return "Produto/listaProdutos";
     }
 
-
-
+    // Salvar ou atualizar produto
     @PostMapping("/salvarProduto")
     public String salvarProduto(@RequestParam(required = false) Integer idProduto,
                                 @RequestParam String nmProduto,
                                 @RequestParam String deProduto,
                                 @RequestParam String nuPreco,
                                 @RequestParam int qtEstoque,
+<<<<<<< Updated upstream
                                 @RequestParam("imagemProduto") MultipartFile imagemProduto,
+=======
+                                @RequestParam(required = false) MultipartFile imagemProduto,
+>>>>>>> Stashed changes
                                 RedirectAttributes redirectAttributes) {
         try {
-
             int precoCentavos = (int) (Double.parseDouble(nuPreco.replace(".", "").replace(",", ".")) * 100);
 
             Produtos produto = new Produtos();
@@ -59,6 +70,7 @@ public class ProdutosController {
             produto.setQtEstoque(qtEstoque);
 
             if (imagemProduto != null && !imagemProduto.isEmpty()) {
+<<<<<<< Updated upstream
                 try {
 
                     String uploadDir = "src/main/resources/";
@@ -91,6 +103,10 @@ public class ProdutosController {
                 if (produtoExistente != null) {
                     produto.setImagemProduto(produtoExistente.getImagemProduto());
                 }
+=======
+                byte[] bytes = imagemProduto.getBytes();
+                produto.setImagemProduto(bytes);
+>>>>>>> Stashed changes
             }
 
             if (idProduto == null || idProduto == -1) {
@@ -111,7 +127,11 @@ public class ProdutosController {
         return "redirect:/telaProduto/lista";
     }
 
+<<<<<<< Updated upstream
 
+=======
+    // Editar produto
+>>>>>>> Stashed changes
     @GetMapping("/editar/{idProduto}")
     public String editarProduto(@PathVariable Integer idProduto, Model model, RedirectAttributes redirectAttributes) {
         try {
@@ -130,11 +150,7 @@ public class ProdutosController {
         }
     }
 
-    public String limparCampos(Model model) {
-        model.addAttribute("produto", new Produtos());
-        return "Produto/telaProduto";
-    }
-
+    // Excluir produto
     @GetMapping("/excluir/{idProduto}")
     public String excluirProduto(@PathVariable("idProduto") Integer idProduto, RedirectAttributes redirectAttributes) {
         try {
@@ -149,7 +165,7 @@ public class ProdutosController {
         return "redirect:/telaProduto/lista";
     }
 
-
+    // Validar produto (se precisar em outra lógica sua)
     @PostMapping
     public String validarProduto(@RequestParam Integer idProduto,
                                  @RequestParam String nmProduto,
@@ -163,5 +179,20 @@ public class ProdutosController {
         }
 
         return "redirect:/telaProduto";
+    }
+
+    // Exibir imagem do produto
+    @GetMapping("/imagem/{idProduto}")
+    @ResponseBody
+    public ResponseEntity<byte[]> exibirImagem(@PathVariable Integer idProduto) {
+        Produtos produto = produtosdao.buscarPorId(idProduto);
+
+        if (produto == null || produto.getImagemProduto() == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok()
+                .header("Content-Type", "image/jpeg")
+                .body(produto.getImagemProduto());
     }
 }
