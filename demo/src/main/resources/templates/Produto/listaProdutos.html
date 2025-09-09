@@ -431,7 +431,7 @@
       cardWrapper.className = 'product-card-item';
 
       const imagemCapa = produto.imagemProduto
-              ? `/telaProduto/imagem/${produto.imagemProduto}`
+              ? `data:image/jpeg;base64,${produto.imagemProduto}`
               : '../imagens/placeholder-produto.jpg';
 
       cardWrapper.innerHTML = `
