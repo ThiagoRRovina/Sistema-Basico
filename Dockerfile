@@ -1,4 +1,3 @@
-
 FROM eclipse-temurin:17-jdk-jammy
 
 WORKDIR /app
@@ -6,6 +5,8 @@ WORKDIR /app
 COPY demo/mvnw .
 COPY demo/.mvn .mvn
 COPY demo/pom.xml .
+
+RUN chmod +x ./mvnw
 
 RUN ./mvnw dependency:go-offline
 
