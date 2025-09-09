@@ -11,7 +11,6 @@ import java.net.URI;
 
 @SpringBootApplication
 @EnableTransactionManagement
-@Import(FunctionConfiguration.class)
 public class Battlefield3Application {
 
 	public static void main(String[] args) {
