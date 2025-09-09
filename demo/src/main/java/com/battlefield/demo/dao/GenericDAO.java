@@ -1,7 +1,5 @@
 package com.battlefield.demo.dao;
 
-
-import io.hypersistence.utils.hibernate.query.SQLExtractor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import jakarta.persistence.EntityManager;
@@ -352,7 +350,6 @@ public abstract class GenericDAO<T, I extends Serializable> extends com.battlefi
         try {
             Query query = conexao.createQuery("select count(*) from " + classe.getSimpleName() + " t where " + filtro);
 
-            printQuery(query);
             int count = ((Long) query.getSingleResult()).intValue();
             return count;
         } catch (Exception e) {
@@ -425,11 +422,5 @@ public abstract class GenericDAO<T, I extends Serializable> extends com.battlefi
         }
     }
 
-    private void printQuery(Query query) {
-        // Apenas imprime o toString da query, pois SQLExtractor não suporta jakarta.persistence.Query
-        System.out.println("============");
-        System.out.println(query.toString());
-        System.out.println("============");
-    }
 }
 
