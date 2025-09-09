@@ -1,6 +1,7 @@
 package com.battlefield.demo.usuario.dao;
 
 import com.battlefield.demo.dao.GenericDAO;
+import com.battlefield.demo.produtos.model.Produtos;
 import com.battlefield.demo.usuario.model.Usuario;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -34,6 +35,15 @@ public class usuarioDAO extends GenericDAO<Usuario, Integer> {
         return resultado.isEmpty() ? null : resultado.get(0);
     }
 
+    public Usuario buscarPorId(Integer idUsuario) {
+        List<Usuario> resultado = entityManager
+                .createQuery("SELECT u FROM Usuario u WHERE u.idUsuario = :idUsuario", Usuario.class)
+                .setParameter("idUsuario", idUsuario)
+                .getResultList();
+
+        return resultado.isEmpty() ? null : resultado.get(0);
+    }
+
     public Usuario buscaUsuario(String email, String senha) {
         try {
             return entityManager
@@ -58,7 +68,7 @@ public class usuarioDAO extends GenericDAO<Usuario, Integer> {
 
 
     @Transactional
-    public void gravar(Usuario usuario) {
+    public boolean gravar(Usuario usuario) {
         String sql = "INSERT INTO usuario (nome, email, endereco, senha, telefone) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = dataSource.getConnection();
@@ -81,6 +91,7 @@ public class usuarioDAO extends GenericDAO<Usuario, Integer> {
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao inserir usuário", e);
         }
+        return false;
     }
 
     public List<Usuario> listarTodos() {
@@ -124,6 +135,27 @@ public class usuarioDAO extends GenericDAO<Usuario, Integer> {
             throw new RuntimeException("Erro ao excluir o produto", e);
         }
     }
+
+    @Transactional
+    public void editar(Usuario usuario) {
+        String sql = "UPDATE usuario SET nome = ?, email = ?, endereco = ?, telefone = ? WHERE usuario_id = ?";
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, usuario.getNmNome());
+            stmt.setString(2, usuario.getNmEmail());
+            stmt.setString(3, usuario.getNmEndereco());
+            stmt.setString(4, usuario.getNmTelefone());
+            stmt.setInt(5, usuario.getIdUsuario());
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao atualizar o usuário", e);
+        }
+    }
+
 
 
 

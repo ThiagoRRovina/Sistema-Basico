@@ -106,7 +106,6 @@ public class ProdutosController {
         return "redirect:/telaProduto/lista";
     }
 
-    // Editar produto
     @GetMapping("/editar/{idProduto}")
     public String editarProduto(@PathVariable Integer idProduto, Model model, RedirectAttributes redirectAttributes) {
         try {
