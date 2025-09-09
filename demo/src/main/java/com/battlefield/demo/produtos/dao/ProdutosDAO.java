@@ -55,6 +55,7 @@ public class ProdutosDAO  extends GenericDAO<Produtos, Integer> {
                     produto.setDeProduto(rs.getString("descricao"));
                     produto.setNuPreco(rs.getInt("preco"));
                     produto.setQtEstoque(rs.getInt("estoque"));
+                    produto.setImagemProduto(rs.getString("imagem_produto"));
                 }
             }
 
@@ -84,6 +85,7 @@ public class ProdutosDAO  extends GenericDAO<Produtos, Integer> {
                 p.setDeProduto(rs.getString("descricao"));
                 p.setNuPreco(rs.getInt("preco"));
                 p.setQtEstoque(rs.getInt("estoque"));
+                p.setImagemProduto(rs.getString("imagem_produto"));
                 lista.add(p);
             }
 
@@ -97,7 +99,7 @@ public class ProdutosDAO  extends GenericDAO<Produtos, Integer> {
 
     @Transactional
     public void gravar(Produtos produtos) {
-        String sql = "INSERT INTO produtos (nome, descricao, preco, estoque) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO produtos (nome, descricao, preco, estoque, imagem_produto) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -106,6 +108,7 @@ public class ProdutosDAO  extends GenericDAO<Produtos, Integer> {
             stmt.setString(2, produtos.getDeProduto());
             stmt.setInt(3, produtos.getNuPreco());
             stmt.setFloat(4, produtos.getQtEstoque());
+            stmt.setString(5, produtos.getImagemProduto());
 
             stmt.executeUpdate();
 
@@ -140,7 +143,7 @@ public class ProdutosDAO  extends GenericDAO<Produtos, Integer> {
 
     @Transactional
     public void editar(Produtos produtos) {
-        String sql = "UPDATE produtos SET nome = ?, descricao = ?, preco = ?, estoque = ? WHERE produto_id = ?";
+        String sql = "UPDATE produtos SET nome = ?, descricao = ?, preco = ?, estoque = ?, imagem_produto = ? WHERE produto_id = ?";
 
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -149,7 +152,8 @@ public class ProdutosDAO  extends GenericDAO<Produtos, Integer> {
             stmt.setString(2, produtos.getDeProduto());
             stmt.setInt(3, produtos.getNuPreco());
             stmt.setFloat(4, produtos.getQtEstoque());
-            stmt.setInt(5, produtos.getIdProduto()); // WHERE id = ?
+            stmt.setString(5, produtos.getImagemProduto());
+            stmt.setInt(6, produtos.getIdProduto()); // WHERE id = ?
 
             stmt.executeUpdate();
 

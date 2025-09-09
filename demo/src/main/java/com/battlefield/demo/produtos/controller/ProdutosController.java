@@ -2,11 +2,20 @@ package com.battlefield.demo.produtos.controller;
 
 import com.battlefield.demo.produtos.dao.ProdutosDAO;
 import com.battlefield.demo.produtos.model.Produtos;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Controller
@@ -14,18 +23,19 @@ import java.util.List;
 public class ProdutosController {
 
     private final ProdutosDAO produtosdao;
-    private final ProdutosDAO produtosDAO;
 
-    public ProdutosController(ProdutosDAO produtosdao, ProdutosDAO produtosDAO) {
+    public ProdutosController(ProdutosDAO produtosdao) {
         this.produtosdao = produtosdao;
-        this.produtosDAO = produtosDAO;
     }
 
+    // Tela de cadastro de produto
     @GetMapping
-    public String exibirForm() {
+    public String exibirForm(Model model) {
+        model.addAttribute("produto", new Produtos());
         return "Produto/telaProduto";
     }
 
+    // Tela de listagem
     @GetMapping("/lista")
     public String exibirFormLista(Model model) {
         List<Produtos> produtos = produtosdao.listarTodos();
@@ -33,17 +43,16 @@ public class ProdutosController {
         return "Produto/listaProdutos";
     }
 
-
-
+    // Salvar ou atualizar produto
     @PostMapping("/salvarProduto")
     public String salvarProduto(@RequestParam(required = false) Integer idProduto,
                                 @RequestParam String nmProduto,
                                 @RequestParam String deProduto,
                                 @RequestParam String nuPreco,
                                 @RequestParam int qtEstoque,
+                                @RequestParam(required = false) MultipartFile imagemProduto,
                                 RedirectAttributes redirectAttributes) {
         try {
-
             int precoCentavos = (int) (Double.parseDouble(nuPreco.replace(".", "").replace(",", ".")) * 100);
 
             Produtos produto = new Produtos();
@@ -51,6 +60,33 @@ public class ProdutosController {
             produto.setDeProduto(deProduto);
             produto.setNuPreco(precoCentavos);
             produto.setQtEstoque(qtEstoque);
+
+            if (imagemProduto != null && !imagemProduto.isEmpty()) {
+                String uploadDir = "D:/Gerenciador/ProjectOd/Sistema-Basico/demo/uploads/";
+
+                Path uploadPath = Paths.get(uploadDir);
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                String originalFilename = imagemProduto.getOriginalFilename();
+                String fileExtension = "";
+                if (originalFilename != null && originalFilename.contains(".")) {
+                    fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+                }
+                String uniqueFilename = System.currentTimeMillis() + "_" +
+                        nmProduto.replaceAll("[^a-zA-Z0-9]", "_") + fileExtension;
+
+                Path filePath = uploadPath.resolve(uniqueFilename);
+                imagemProduto.transferTo(filePath.toFile());
+
+                produto.setImagemProduto(uniqueFilename); // só nome no banco
+            } else if (idProduto != null && idProduto != -1) {
+                Produtos produtoExistente = produtosdao.buscarPorId(idProduto);
+                if (produtoExistente != null) {
+                    produto.setImagemProduto(produtoExistente.getImagemProduto());
+                }
+            }
 
             if (idProduto == null || idProduto == -1) {
                 produtosdao.gravar(produto);
@@ -70,7 +106,7 @@ public class ProdutosController {
         return "redirect:/telaProduto/lista";
     }
 
-
+    // Editar produto
     @GetMapping("/editar/{idProduto}")
     public String editarProduto(@PathVariable Integer idProduto, Model model, RedirectAttributes redirectAttributes) {
         try {
@@ -89,11 +125,7 @@ public class ProdutosController {
         }
     }
 
-    public String limparCampos(Model model) {
-        model.addAttribute("produto", new Produtos());
-        return "Produto/telaProduto";
-    }
-
+    // Excluir produto
     @GetMapping("/excluir/{idProduto}")
     public String excluirProduto(@PathVariable("idProduto") Integer idProduto, RedirectAttributes redirectAttributes) {
         try {
@@ -108,7 +140,7 @@ public class ProdutosController {
         return "redirect:/telaProduto/lista";
     }
 
-
+    // Validar produto (caso necessário em outra lógica sua)
     @PostMapping
     public String validarProduto(@RequestParam Integer idProduto,
                                  @RequestParam String nmProduto,
@@ -123,4 +155,20 @@ public class ProdutosController {
 
         return "redirect:/telaProduto";
     }
+
+    @GetMapping("/imagem/{nome}")
+    public ResponseEntity<byte[]> exibirImagem(@PathVariable("nome") String nomeDoArquivo) throws IOException {
+        String uploadDir = "D:/Gerenciador/ProjectOd/Sistema-Basico/demo/uploads/";
+        Path filePath = Paths.get(uploadDir, nomeDoArquivo);
+
+        if(!Files.exists(filePath)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        byte[] bytes = Files.readAllBytes(filePath);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+        return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
+    }
+
 }

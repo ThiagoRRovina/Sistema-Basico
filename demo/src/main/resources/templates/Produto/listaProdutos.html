@@ -11,9 +11,6 @@
 
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
-
     :root {
       --primary-color: #007bff;
       --primary-dark: #0056b3;
@@ -22,15 +19,13 @@
       --header-text: #ffffff;
       --body-bg: #f8f9fa;
       --card-bg: #ffffff;
-      --table-header-bg: #495057; /* Ainda usado para o estilo geral, mas não para o cabeçalho de tabela */
-      --table-header-text: #ffffff; /* Ainda usado para o estilo geral */
+      --table-header-bg: #495057;
+      --table-header-text: #ffffff;
       --border-color: #dee2e6;
       --success-color: #28a745;
       --success-dark: #218838;
       --danger-color: #dc3545;
       --danger-dark: #c82333;
-
-      /* Cores e estilos para os cards de produto (inspirado na telaHome.html) */
       --product-card-bg-gradient-start: #f8fafc;
       --product-card-bg-gradient-end: #e0f7fa;
       --product-card-title-color: var(--primary-color);
@@ -50,7 +45,7 @@
       line-height: 1.6;
     }
 
-    /* Navbar principal e secundária (mantidas como estão) */
+
     .navbar {
       background-color: #343a40;
       padding: 15px 0;
@@ -86,7 +81,7 @@
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      background: var(--card-bg); /* O container principal ainda tem fundo branco */
+      background: var(--card-bg);
       padding: 2.5rem;
       border-radius: 10px;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
@@ -99,8 +94,6 @@
       color: #2c3e50;
     }
 
-    /* Removido o estilo de tabela */
-    /* table, th, td { ... } */
 
     .top-bar {
       display: flex;
@@ -108,6 +101,7 @@
       align-items: center;
       margin-bottom: 2rem;
     }
+
 
     .btn-new-product {
       background-color: var(--primary-color);
@@ -126,20 +120,20 @@
       color: white;
     }
 
-    /* --- Estilos para os Cards de Produto (Novos) --- */
+
     .product-card-container {
       display: flex;
       flex-wrap: wrap;
-      gap: 20px; /* Espaçamento entre os cards */
-      justify-content: flex-start; /* Alinha os cards ao início */
-      padding-top: 20px; /* Espaçamento após o título/barra */
+      gap: 20px;
+      justify-content: flex-start;
+      padding-top: 20px;
     }
 
     .product-card-item {
-      flex: 0 0 calc(25% - 15px); /* 4 cards por linha em telas grandes, considerando o gap */
+      flex: 0 0 calc(25% - 15px);
       max-width: calc(25% - 15px);
-      margin-bottom: 20px; /* Espaçamento inferior para cada linha de cards */
-      box-sizing: border-box; /* Garante que padding e border sejam incluídos no width */
+      margin-bottom: 20px;
+      box-sizing: border-box;
     }
 
     .product-card {
@@ -161,15 +155,15 @@
 
     .product-card-img {
       max-width: 100%;
-      max-height: 250px; /* Altura máxima para as imagens */
+      max-height: 250px;
       width: auto;
       height: auto;
       display: block;
       margin-left: auto;
       margin-right: auto;
-      object-fit: contain; /* Redimensiona a imagem para caber no container mantendo a proporção */
-      background: var(--product-card-bg-gradient-start); /* Fundo para a área da imagem */
-      padding: 15px; /* Espaçamento interno para a imagem */
+      object-fit: contain;
+      background: var(--product-card-bg-gradient-start);
+      padding: 15px;
     }
 
     .product-card-body {
@@ -178,7 +172,7 @@
       flex: 1 1 auto;
       display: flex;
       flex-direction: column;
-      justify-content: space-between; /* Empurra os botões para o final */
+      justify-content: space-between;
       padding: 20px;
     }
 
@@ -201,46 +195,80 @@
       font-weight: bold;
       font-size: 1.5rem;
       margin-top: 10px;
-      margin-bottom: 15px; /* Espaçamento antes dos botões */
+      margin-bottom: 15px;
     }
 
     .product-card-actions {
       display: flex;
       justify-content: space-between;
       gap: 10px;
-      margin-top: auto; /* Empurra as ações para o final do card-body */
+      margin-top: auto;
     }
 
-    /* Botões dentro do card (reuso de btn-edit e btn-delete, mas com ajustes) */
-    .product-card-actions .btn {
-      flex: 1; /* Faz os botões dividirem o espaço igualmente */
-      margin-left: 0; /* Remove margin-left para não ter espaçamento interno excessivo */
+
+    .product-card-actions .btn-editar {
+      flex: 1;
+      margin-left: 0;
       padding: 10px 15px;
       font-size: 0.9rem;
-      border-radius: 20px; /* Botões mais arredondados */
+      border-radius: 10px;
+      border-color: blue;
+      color: blue;
     }
 
-    /* Estilos responsivos para os cards */
+    .product-card-actions .btn-editar:hover {
+      flex: 1;
+      margin-left: 0;
+      padding: 10px 15px;
+      font-size: 0.9rem;
+      border-radius: 10px;
+      border-color: white;
+      background-color: blue;
+      color: white;
+
+    }
+
+    .product-card-actions .btn-excluir {
+      flex: 1;
+      margin-left: 0;
+      padding: 10px 15px;
+      font-size: 0.9rem;
+      border-radius: 10px;
+      border-color: red;
+      color: red;
+    }
+
+    .product-card-actions .btn-excluir:hover {
+      flex: 1;
+      margin-left: 0;
+      padding: 10px 15px;
+      font-size: 0.9rem;
+      border-radius: 10px;
+      border-color: white;
+      background-color: red;
+      color: white;
+    }
+
+
     @media (max-width: 1199.98px) {
       .product-card-item {
-        flex: 0 0 calc(33.333% - 13.333px); /* 3 cards por linha */
+        flex: 0 0 calc(33.333% - 13.333px);
         max-width: calc(33.333% - 13.333px);
       }
     }
     @media (max-width: 991.98px) {
       .product-card-item {
-        flex: 0 0 calc(50% - 10px); /* 2 cards por linha */
+        flex: 0 0 calc(50% - 10px);
         max-width: calc(50% - 10px);
       }
     }
     @media (max-width: 767.98px) {
       .product-card-item {
-        flex: 0 0 100%; /* 1 card por linha */
+        flex: 0 0 100%;
         max-width: 100%;
       }
     }
 
-    /* Estilos para a tela de modal (confirmação) - Mantidos do código anterior */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -327,7 +355,7 @@
 
 <nav class="navbar navbar-expand-lg">
   <div class="container-fluid">
-    <a class="navbar-brand">Basic System</a>
+  <a class="navbar-brand" href="/Home">Basic System</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbar"
             aria-controls="topNavbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -359,8 +387,7 @@
   <div class="top-bar">
     <h2>Produtos Cadastrados</h2>
     <a th:href="@{/telaProduto}" class="btn-new-product">
-      <i class='bx bx-plus-medical' style='vertical-align: middle; margin-right: 5px;'></i> Novo Produto
-    </a>
+      <i class='bx bx-plus-medical' style='vertical-align: middle; margin-right: 5px;'></i> Novo Produto</a>
   </div>
 
   <div class="product-card-container" id="produtos-container">
@@ -389,22 +416,23 @@
 
     // Navegação
     document.getElementById('nav-produtos').onclick = function() {
-      window.location.href = "/Home/Produto"; // Ajuste conforme sua rota de listagem de produtos
+      window.location.href = "/Home/Produto";
     };
     document.getElementById('nav-usuarios').onclick = function() {
       window.location.href = "/Home/Usuario";
     };
 
     const produtosContainer = document.getElementById('produtos-container');
-    // Pegue os dados dos produtos do modelo Thymeleaf
-    const produtos = /*[[${produtos}]]*/ []; // Isso injeta a lista de produtos do Spring Boot/Thymeleaf
+
+    const produtos = /*[[${produtos}]]*/ [];
 
     function criarCardProduto(produto) {
       const cardWrapper = document.createElement('div');
-      cardWrapper.className = 'product-card-item'; // Classe para controle de layout responsivo
+      cardWrapper.className = 'product-card-item';
 
-      // Opcional: Adicionar uma imagem padrão se a capa do produto não existir ou estiver vazia
-      const imagemCapa = produto.nmImagemProduto && produto.nmImagemProduto !== '' ? produto.nmImagemProduto : '../imagens/placeholder-produto.jpg'; // Altere para um placeholder de produto, se tiver
+      const imagemCapa = produto.imagemProduto
+              ? `/telaProduto/imagem/${produto.imagemProduto}`
+              : '../imagens/placeholder-produto.jpg';
 
       cardWrapper.innerHTML = `
         <div class="product-card">
@@ -417,39 +445,35 @@
                 </div>
                 <p class="product-card-price">R$ ${parseFloat(produto.nuPreco / 100.0).toFixed(2).replace('.', ',')}</p>
                 <div class="product-card-actions">
-                    <button class="btn btn-edit" data-id="${produto.idProduto}">Editar</button>
-                    <button class="btn btn-delete" data-id="${produto.idProduto}">Excluir</button>
+                    <button class="btn-editar btn-edit" data-id="${produto.idProduto}">Editar</button>
+                    <button class="btn-excluir btn-delete" data-id="${produto.idProduto}">Excluir</button>
                 </div>
             </div>
         </div>
       `;
 
-      // Adicionar event listeners aos botões dentro do card recém-criado
       cardWrapper.querySelector('.btn-edit').addEventListener('click', function() {
         window.location.href = `/telaProduto/editar/${produto.idProduto}`;
       });
 
       cardWrapper.querySelector('.btn-delete').addEventListener('click', function() {
-        showDeleteConfirmationModal(produto.idProduto); // Chama a função para mostrar a modal
+        showDeleteConfirmationModal(produto.idProduto);
       });
 
       return cardWrapper;
     }
 
-    // Função para carregar e exibir os produtos
+
     function carregarProdutos() {
       if (produtos.length > 0) {
         produtos.forEach(produto => {
           const card = criarCardProduto(produto);
           produtosContainer.appendChild(card);
         });
-      } else {
-        // Se não houver produtos, a mensagem do Thymeleaf já será exibida
-        // (Removi o else aqui porque o Thymeleaf já gerencia isso)
       }
     }
 
-    // --- Lógica da Modal de Confirmação (adaptada para produtos) ---
+
     const modalOverlay = document.getElementById('deleteConfirmationModal');
     const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
     const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
@@ -480,8 +504,8 @@
       }
     });
 
-    // Chamada inicial para carregar os produtos quando a página é carregada
     carregarProdutos();
+
   });
 </script>
 </body>

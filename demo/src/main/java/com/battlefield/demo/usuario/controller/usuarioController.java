@@ -62,9 +62,9 @@ public class usuarioController {
     public String salvar(@RequestParam(required = false) Integer idusuario,
                          @RequestParam String nmNome,
                          @RequestParam String nmEmail,
-                         @RequestParam String nmEndereco,
+                         @RequestParam (required = false)String nmEndereco,
                          @RequestParam String nmSenha,
-                         @RequestParam String nmTelefone,
+                         @RequestParam (required = false)String nmTelefone,
                          Model model,
                          RedirectAttributes redirectAttributes) {
 

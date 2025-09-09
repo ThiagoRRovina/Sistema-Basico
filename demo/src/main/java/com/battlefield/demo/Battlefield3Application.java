@@ -2,6 +2,7 @@ package com.battlefield.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -10,6 +11,7 @@ import java.net.URI;
 
 @SpringBootApplication
 @EnableTransactionManagement
+@Import(FunctionConfiguration.class)
 public class Battlefield3Application {
 
 	public static void main(String[] args) {
