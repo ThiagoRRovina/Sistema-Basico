@@ -147,3 +147,39 @@
 </script>
 </body>
 </html>
+import com.battlefield.demo.usuario.JpaUserDetailsService;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final JpaUserDetailsService userDetailsService;
+
+    @Autowired
+    public SecurityConfig(JpaUserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+            .authorizeRequests()
+                .antMatchers("/css/**", "/js/**", "/imagens/**", "/uploads/**", "/uploadsImagem/**").permitAll()
+                .anyRequest().authenticated()
+            .and()
+            .formLogin()
+                .loginPage("/telaLogin")
+                .usernameParameter("nmEmail")
+                .permitAll()
+            .and()
+            .logout()
+                .permitAll();
+
+        http.userDetailsService(userDetailsService);
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService);
+    }
+}
