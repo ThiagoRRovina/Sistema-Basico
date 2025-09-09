@@ -45,55 +45,21 @@ public class ProdutosController {
 
     // Salvar ou atualizar produto
     @PostMapping("/salvarProduto")
-    public String salvarProduto(@RequestParam(required = false) Integer idProduto,
-                                @RequestParam String nmProduto,
-                                @RequestParam String deProduto,
+    public String salvarProduto(@ModelAttribute Produtos produto,
                                 @RequestParam String nuPreco,
-                                @RequestParam int qtEstoque,
-                                @RequestParam(required = false) MultipartFile imagemProduto,
                                 RedirectAttributes redirectAttributes) {
         try {
-            int precoCentavos = (int) (Double.parseDouble(nuPreco.replace(".", "").replace(",", ".")) * 100);
-
-            Produtos produto = new Produtos();
-            produto.setNmProduto(nmProduto);
-            produto.setDeProduto(deProduto);
-            produto.setNuPreco(precoCentavos);
-            produto.setQtEstoque(qtEstoque);
-
-            if (imagemProduto != null && !imagemProduto.isEmpty()) {
-                String uploadDir = "D:/Gerenciador/ProjectOd/Sistema-Basico/demo/uploads/";
-
-                Path uploadPath = Paths.get(uploadDir);
-                if (!Files.exists(uploadPath)) {
-                    Files.createDirectories(uploadPath);
-                }
-
-                String originalFilename = imagemProduto.getOriginalFilename();
-                String fileExtension = "";
-                if (originalFilename != null && originalFilename.contains(".")) {
-                    fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
-                }
-                String uniqueFilename = System.currentTimeMillis() + "_" +
-                        nmProduto.replaceAll("[^a-zA-Z0-9]", "_") + fileExtension;
-
-                Path filePath = uploadPath.resolve(uniqueFilename);
-                imagemProduto.transferTo(filePath.toFile());
-
-                produto.setImagemProduto(uniqueFilename); // só nome no banco
-            } else if (idProduto != null && idProduto != -1) {
-                Produtos produtoExistente = produtosdao.buscarPorId(idProduto);
-                if (produtoExistente != null) {
-                    produto.setImagemProduto(produtoExistente.getImagemProduto());
-                }
+            // Converte o preço formatado (ex: "1.234,56") para centavos (int)
+            if (nuPreco != null && !nuPreco.isEmpty()) {
+                int precoCentavos = (int) (Double.parseDouble(nuPreco.replace(".", "").replace(",", ".")) * 100);
+                produto.setNuPreco(precoCentavos);
             }
 
-            if (idProduto == null || idProduto == -1) {
+            if (produto.getIdProduto() == null) {
                 produtosdao.gravar(produto);
                 ProdutosDAO.insereLog("PRODUTOS", ProdutosDAO.TipoOcorrenciaLog.INSERCAO);
                 redirectAttributes.addFlashAttribute("message", "Produto cadastrado com sucesso!");
             } else {
-                produto.setIdProduto(idProduto);
                 produtosdao.editar(produto);
                 ProdutosDAO.insereLog("PRODUTOS", ProdutosDAO.TipoOcorrenciaLog.ALTERACAO);
                 redirectAttributes.addFlashAttribute("message", "Produto atualizado com sucesso!");
@@ -105,6 +71,7 @@ public class ProdutosController {
 
         return "redirect:/telaProduto/lista";
     }
+
 
     @GetMapping("/editar/{idProduto}")
     public String editarProduto(@PathVariable Integer idProduto, Model model, RedirectAttributes redirectAttributes) {
@@ -124,7 +91,6 @@ public class ProdutosController {
         }
     }
 
-    // Excluir produto
     @GetMapping("/excluir/{idProduto}")
     public String excluirProduto(@PathVariable("idProduto") Integer idProduto, RedirectAttributes redirectAttributes) {
         try {
