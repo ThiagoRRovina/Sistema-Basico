@@ -25,4 +25,10 @@ public class homeController {
     public String exibirUsuario() {
         return "redirect:/telaLogin/listaUsuarios";
     }
+
+    @GetMapping("/PerfilUsuario")
+    public String exibirPerfilUsuario() {
+        return "redirect:/telaLogin/editar/{idUsuario}";
+    }
+
 }

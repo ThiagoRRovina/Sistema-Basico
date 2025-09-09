@@ -49,6 +49,11 @@ public class usuarioController {
         return "Usuario/listaUsuarios";
     }
 
+    @GetMapping("/PerfilUsuario")
+    public String exibirPerfilUsuarios(Model model) {
+        return "Usuario/PerfilUsuario";
+    }
+
 
     public String hashSenha(String senhaEmTextoSimples) {
         if (senhaEmTextoSimples == null || senhaEmTextoSimples.isEmpty()) {
@@ -58,60 +63,70 @@ public class usuarioController {
         return passwordEncoder.encode(senhaEmTextoSimples);
     }
 
+    @GetMapping("/editar/{idUsuario}")
+    public String editarUsuario(@PathVariable Integer idUsuario, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            Usuario usuario = usuariodao.buscarPorId(idUsuario);
+
+            if (usuario == null) {
+                redirectAttributes.addFlashAttribute("erro", "Usuario não encontrado.");
+                return "redirect:/telaLogin/lista";
+            }
+            model.addAttribute("usuario", usuario);
+            return "Usuario/PerfilUsuario";
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("erro", "Erro ao carregar produto.");
+            return "redirect:/telaLogin/listaUsuarios";
+        }
+    }
+
     @PostMapping("/salvar")
     public String salvar(@RequestParam(required = false) Integer idusuario,
                          @RequestParam String nmNome,
                          @RequestParam String nmEmail,
-                         @RequestParam (required = false)String nmEndereco,
-                         @RequestParam String nmSenha,
-                         @RequestParam (required = false)String nmTelefone,
-                         Model model,
+                         @RequestParam(required = false) String nmSenha,
+                         @RequestParam String nmEndereco,
+                         @RequestParam String nmTelefone,
                          RedirectAttributes redirectAttributes) {
-
-
-
-        Usuario usuarioExistente = usuariodao.buscarPorEmail(nmEmail);
-        if (usuarioExistente != null && (idusuario == null || !usuarioExistente.getIdUsuario().equals(idusuario))) {
-            model.addAttribute("erro", "O email já está registrado.");
-            return "redirect:/telaLogin";
-        }
-
-
-
-        nmSenha=hashSenha(nmSenha);
-        Usuario usuario = new Usuario();
-        usuario.setNmNome(nmNome);
-        usuario.setNmEmail(nmEmail);
-        usuario.setNmEndereco(nmEndereco);
-        usuario.setNmSenha(nmSenha);
-        usuario.setNmTelefone(nmTelefone);
-
-
         try {
-            if (idusuario == null || idusuario == -1) {
-                usuariodao.gravar(usuario);
-                usuariodao.insereLog("USUARIO", TipoOcorrenciaLog.INSERCAO);
-                System.out.println("Usuário inserido com sucesso.");
-                return "redirect:/telaLogin";
-            } else {
-                usuario.setIdUsuario(idusuario);
-                boolean atualizou = usuariodao.atualizar(usuario);
+            Usuario usuario;
+            boolean novoCadastro = (idusuario == null || idusuario == -1);
 
-                if (atualizou) {
-                    usuariodao.insereLog("USUARIO", TipoOcorrenciaLog.ALTERACAO);
-                    System.out.println("Usuário atualizado com sucesso.");
-                    return "redirect:/telaLogin";
-                } else {
-                    model.addAttribute("erro", "Erro ao atualizar o usuário.");
-                    return "redirect:/telaLogin";
+            if (!novoCadastro) {
+                usuario = usuariodao.buscarPorId(idusuario);
+                if (usuario == null) {
+                    redirectAttributes.addFlashAttribute("erro", "Usuário não encontrado.");
+                    return "redirect:/telaLogin/listaUsuarios";
                 }
+            } else {
+                usuario = new Usuario();
+            }
+
+            usuario.setNmNome(nmNome);
+            usuario.setNmEmail(nmEmail);
+            usuario.setNmEndereco(nmEndereco);
+            usuario.setNmTelefone(nmTelefone);
+
+            // Só atualiza a senha se vier preenchida (evita sobrescrever com vazio)
+            if (nmSenha != null && !nmSenha.isEmpty()) {
+                usuario.setNmSenha(hashSenha(nmSenha));
+            }
+
+            if (novoCadastro) {
+                usuariodao.gravar(usuario);
+                usuarioDAO.insereLog("USUARIO", usuarioDAO.TipoOcorrenciaLog.INSERCAO);
+                redirectAttributes.addFlashAttribute("message", "Usuário cadastrado com sucesso!");
+            } else {
+                usuariodao.editar(usuario);
+                usuarioDAO.insereLog("USUARIO", usuarioDAO.TipoOcorrenciaLog.ALTERACAO);
+                redirectAttributes.addFlashAttribute("message", "Usuário atualizado com sucesso!");
             }
         } catch (Exception e) {
-            System.out.println("Erro ao salvar ou atualizar usuário: " + e.getMessage());
             e.printStackTrace();
-            model.addAttribute("erro", "Erro interno no servidor.");
-            return "redirect:/telaLogin";
+            redirectAttributes.addFlashAttribute("erro", "Erro interno no servidor.");
         }
+        return "redirect:/telaLogin/listaUsuarios";
     }
 
 
@@ -128,6 +143,7 @@ public class usuarioController {
             usuariodao.excluir(idUsuario);
             usuariodao.insereLog("USUARIO", usuarioDAO.TipoOcorrenciaLog.EXCLUSAO);
             redirectAttributes.addFlashAttribute("message", "Produto excluído com sucesso!");
+
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("erro", "Erro ao excluir o produto.");
