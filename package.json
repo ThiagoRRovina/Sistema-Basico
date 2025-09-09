@@ -2,7 +2,14 @@
   "builds": [
     {
       "src": "pom.xml",
-      "use": "@vercel/java"
+      "use": "@vercel/java",
+      "config": { "memory": "2048m" }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/"
     }
   ]
 }
