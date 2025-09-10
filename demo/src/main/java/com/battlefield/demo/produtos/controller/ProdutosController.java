@@ -2,19 +2,11 @@ package com.battlefield.demo.produtos.controller;
 
 import com.battlefield.demo.produtos.dao.ProdutosDAO;
 import com.battlefield.demo.produtos.model.Produtos;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @Controller
@@ -31,17 +23,6 @@ public class ProdutosController {
     public String exibirForm(Model model) {
         model.addAttribute("produto", new Produtos());
         return "Produto/telaProduto";
-    }
-
-    @GetMapping("/imagem/{nomeArquivo}")
-    @ResponseBody
-    public ResponseEntity<byte[]> getImagem(@PathVariable String nomeArquivo) throws IOException {
-        Path caminho = Paths.get("uploads/").resolve(nomeArquivo);
-        byte[] bytes = Files.readAllBytes(caminho);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_PNG); // ajuste conforme o tipo real
-        return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
     }
 
     @GetMapping("/lista")
@@ -85,7 +66,7 @@ public class ProdutosController {
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("erro", "Erro interno no servidor.");
-            return "Produto/telaProduto"; // Em caso de erro, retorna para a mesma página
+            return "Produto/telaProduto";
         }
 
         return "redirect:/telaProduto/lista";
@@ -124,3 +105,4 @@ public class ProdutosController {
         return "redirect:/telaProduto/lista";
     }
 }
+

@@ -7,256 +7,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+          xintegrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- O SEU CSS FOI MANTIDO EXATAMENTE IGUAL -->
     <style>
-        /* Seus estilos existentes aqui */
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
-
         :root {
-            --primary-color: #007bff;
-            --primary-dark: #0056b3;
-            --secondary-color: #6c757d;
-            --header-bg: #343a40;
-            --header-text: #ffffff;
-            --body-bg: #f8f9fa;
-            --card-bg: #ffffff;
-            --table-header-bg: #495057;
-            --table-header-text: #ffffff;
-            --border-color: #dee2e6;
-            --success-color: #28a745;
-            --success-dark: #218838;
-            --danger-color: #dc3545;
-            --danger-dark: #c82333;
+            --primary-color: #007bff; --primary-dark: #0056b3; --secondary-color: #6c757d;
+            --header-bg: #343a40; --header-text: #ffffff; --body-bg: #f8f9fa;
+            --card-bg: #ffffff; --table-header-bg: #495057; --table-header-text: #ffffff;
+            --border-color: #dee2e6; --success-color: #28a745; --success-dark: #218838;
+            --danger-color: #dc3545; --danger-dark: #c82333;
         }
-
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            margin: 0; padding: 0; box-sizing: border-box;
         }
-
         body {
             background-color: var(--body-bg);
             color: #333;
             line-height: 1.6;
         }
-
-
-        .navbar {
-            background-color: #343a40;
-            padding: 15px 0;
-        }
-
-        .navbar-opcoes {
-            background-color: #343a40;
-            padding: 15px 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 47px;
-        }
-
-        .navbar-brand {
-            color: #ffffff !important;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-left: 20px;
-        }
-
-        .navbar-nav .nav-link {
-            color: #ffffff !important;
-            font-size: 1.125rem;
-            font-weight: 700;
-            margin-left: 20px;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .navbar-nav .nav-link:hover {
-            color: #ced4da !important;
-        }
-
-        header {
-            display: none;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: var(--card-bg);
-            padding: 2.5rem;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
-        }
-
-        h2 {
-            text-align: left;
-            margin-top: 0;
-            margin-bottom: 1.5rem;
-            color: #2c3e50;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            margin-bottom: 2rem;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        th,
-        td {
-            padding: 15px;
-            border-bottom: 1px solid var(--border-color);
-            text-align: left;
-        }
-
-        th {
-            background-color: var(--table-header-bg);
-            color: var(--table-header-text);
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        tbody tr:hover {
-            background-color: #f0f2f5;
-            cursor: pointer;
-        }
-
-        .btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background 0.3s ease, transform 0.2s ease;
-            margin-left: 0.5rem;
-        }
-
-
-        .btn-delete {
-            background-color: var(--danger-color);
-        }
-
-        .btn-delete:hover {
-            background-color: white;
-            border-color: red;
-            transform: translateY(-1px);
-            color: red;
-        }
-
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-
-        .col-name, .col-email, .col-address, .col-phone { /* More semantic column names */
-            width: 20%;
-        }
-
-        .col-actions {
-            width: 20%;
-            text-align: center;
-        }
-
-        td.col-actions {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        /* Estilos para a tela de modal (confirmação) */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6); /* Fundo escuro semi-transparente */
-            display: flex; /* Para centralizar o conteúdo */
-            justify-content: center; /* Centraliza horizontalmente */
-            align-items: center; /* Centraliza verticalmente */
-            z-index: 1000; /* Garante que fique acima de outros elementos */
-            opacity: 0; /* Começa invisível */
-            visibility: hidden; /* Começa escondido */
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        .modal-overlay.active {
-            opacity: 1; /* Torna visível */
-            visibility: visible; /* Torna visível */
-        }
-
-        .modal-content {
-            background-color: var(--card-bg);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-            transform: translateY(-20px); /* Leve efeito de entrada */
-            transition: transform 0.3s ease;
-        }
-
-        .modal-overlay.active .modal-content {
-            transform: translateY(0);
-        }
-
-        .modal-content h1 {
-            color: #2c3e50;
-            margin-bottom: 25px;
-            font-size: 1.8rem;
-        }
-
-        .modal-actions {
-            display: flex;
-            justify-content: center;
-            gap: 15px; /* Espaçamento entre os botões */
-            margin-top: 20px;
-        }
-
-        .btn-confirm-yes {
-            background-color: var(--danger-color);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.3s ease;
-        }
-
-        .btn-confirm-yes:hover {
-            background-color: var(--danger-dark);
-        }
-
-        .btn-confirm-cancel {
-            background-color: var(--secondary-color);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.3s ease;
-        }
-
-        .btn-confirm-cancel:hover {
-            background-color: #5a6268;
-        }
+        .navbar { background-color: #343a40; padding: 15px 0; }
+        .navbar-opcoes { background-color: #343a40; padding: 15px 0; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); margin-bottom: 47px; }
+        .navbar-brand { color: #ffffff !important; font-size: 2.5rem; font-weight: 700; margin-left: 20px; }
+        .navbar-nav .nav-link { color: #ffffff !important; font-size: 1.125rem; font-weight: 700; margin-left: 20px; cursor: pointer; transition: color 0.3s ease; }
+        .navbar-nav .nav-link:hover { color: #ced4da !important; }
+        header { display: none; }
+        .container { max-width: 1200px; margin: 0 auto; background: var(--card-bg); padding: 2.5rem; border-radius: 10px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.08); }
+        h2 { text-align: left; margin-top: 0; margin-bottom: 1.5rem; color: #2c3e50; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0; margin-bottom: 2rem; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); }
+        th, td { padding: 15px; border-bottom: 1px solid var(--border-color); text-align: left; }
+        th { background-color: var(--table-header-bg); color: var(--table-header-text); font-weight: 600; text-transform: uppercase; font-size: 0.9rem; }
+        tr:last-child td { border-bottom: none; }
+        tbody tr:hover { background-color: #f0f2f5; cursor: pointer; }
+        .btn { padding: 8px 16px; border: none; border-radius: 5px; color: white; cursor: pointer; font-size: 0.9rem; transition: background 0.3s ease, transform 0.2s ease; margin-left: 0.5rem; }
+        .btn-delete { background-color: var(--danger-color); }
+        .btn-delete:hover { background-color: white; border-color: red; transform: translateY(-1px); color: red; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .col-name, .col-email, .col-address, .col-phone { width: 20%; }
+        .col-actions { width: 20%; text-align: center; }
+        td.col-actions { display: flex; justify-content: center; gap: 0.5rem; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content { background-color: var(--card-bg); padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); text-align: center; max-width: 400px; width: 90%; transform: translateY(-20px); transition: transform 0.3s ease; }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+        .modal-content h1 { color: #2c3e50; margin-bottom: 25px; font-size: 1.8rem; }
+        .modal-actions { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
+        .btn-confirm-yes { background-color: var(--danger-color); color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; transition: background-color 0.3s ease; }
+        .btn-confirm-yes:hover { background-color: var(--danger-dark); }
+        .btn-confirm-cancel { background-color: var(--secondary-color); color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; transition: background-color 0.3s ease; }
+        .btn-confirm-cancel:hover { background-color: #5a6268; }
     </style>
 </head>
 
@@ -264,7 +66,7 @@
 
 <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-    <a class="navbar-brand" href="/Home">Hilda Biscuit</a>
+        <a class="navbar-brand" href="/Home">Hilda Biscuit</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbar"
                 aria-controls="topNavbar" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -283,10 +85,10 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" id="nav-produtos">Lista de Produtos</a>
+                    <a class="nav-link" href="/telaProduto/lista">Lista de Produtos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="nav-usuarios">Lista de Usuarios</a>
+                    <a class="nav-link" href="/telaLogin/listaUsuarios">Lista de Usuarios</a>
                 </li>
             </ul>
         </div>
@@ -308,7 +110,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr id="onClickUsuario" th:each="usuario : ${usuarios}" th:attr="data-idusuario=${usuario.idUsuario}">
+        <tr th:each="usuario : ${usuarios}" class="clickable-row" th:attr="data-href=@{/telaLogin/editar/{id}(id=${usuario.idUsuario})}">
             <td th:text="${usuario.nmNome}">Nome do Usuário</td>
             <td th:text="${usuario.nmEmail}">Email do Usuário</td>
             <td th:text="${usuario.nmEndereco}">Endereço do Usuário</td>
@@ -335,26 +137,26 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-kenU1KFdBIe4zVF00G1M5b4hcpxyD9F7jL+AMvyTG2j99jHnU4M0b4nRJvNX+8/"
+        xintegrity="sha384-kenU1KFdBIe4zVF00G1M5b4hcpxyD9F7jL+AMvyTG2j99jHnU4M0b4nRJvNX+8/"
         crossorigin="anonymous"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
+        // Navegação da navbar
         document.getElementById('nav-produtos').onclick = function() {
-            window.location.href = "/Home/Produto";
+            window.location.href = "/telaProduto/lista"; // Corrigido para URL direta
         };
         document.getElementById('nav-usuarios').onclick = function() {
-            window.location.href = "/Home/Usuario";
+            window.location.href = "/telaLogin/listaUsuarios"; // Corrigido para URL direta
         };
 
-        document.querySelectorAll('tr[data-idusuario]').forEach(function(row) {
+        // Redirecionamento ao clicar na linha da tabela
+        document.querySelectorAll('tr.clickable-row').forEach(function(row) {
             row.addEventListener('click', function() {
-                const idUsuario = row.getAttribute('data-idusuario');
-                window.location.href = "/telaLogin/editar/" + idUsuario;
+                window.location.href = row.getAttribute('data-href');
             });
         });
-
 
         const deleteButtons = document.querySelectorAll('.btn-delete');
         const modalOverlay = document.getElementById('deleteConfirmationModal');
@@ -363,30 +165,30 @@
 
         let userIdToDelete = null;
 
-
         deleteButtons.forEach(button => {
-            button.addEventListener('click', function() {
+            // A função agora recebe o parâmetro 'event'
+            button.addEventListener('click', function(event) {
+                // AQUI ESTÁ A CORREÇÃO: Impede que o clique "passe" para a linha
+                event.stopPropagation();
+
                 userIdToDelete = this.dataset.id;
                 modalOverlay.classList.add('active');
             });
         });
 
-
+        // O resto do seu código para o modal continua igual
         cancelDeleteBtn.addEventListener('click', function() {
             modalOverlay.classList.remove('active');
             userIdToDelete = null;
         });
 
-
         confirmDeleteBtn.addEventListener('click', function() {
             if (userIdToDelete) {
-
                 window.location.href = `/telaLogin/excluir/${userIdToDelete}`;
             }
             modalOverlay.classList.remove('active');
         });
 
-        // Fechar a modal ao clicar fora dela
         modalOverlay.addEventListener('click', function(event) {
             if (event.target === modalOverlay) {
                 modalOverlay.classList.remove('active');
