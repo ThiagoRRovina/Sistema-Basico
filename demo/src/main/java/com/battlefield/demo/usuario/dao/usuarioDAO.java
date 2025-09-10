@@ -4,11 +4,12 @@ import com.battlefield.demo.dao.GenericDAO;
 import com.battlefield.demo.produtos.model.Produtos;
 import com.battlefield.demo.usuario.model.Usuario;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.NoResultException;
+
 import javax.sql.DataSource;
 
 import java.sql.*;

@@ -4,6 +4,7 @@ import com.battlefield.demo.dao.GenericDAO;
 import com.battlefield.demo.produtos.model.Produtos;
 import com.battlefield.demo.usuario.model.Usuario;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.persistence.NoResultException;
+
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
